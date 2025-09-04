@@ -1,0 +1,21 @@
+Viagem:
+	data
+	veiculo (carreta/bitrem)
+	motorista
+	origem
+	destino
+	km
+	valor/km
+	pedagio
+	quantidade de animais
+
+motorista:
+	nome
+	senha
+
+veiculo:
+	tipo(carreta/bitrem)
+	placa
+
+
+
