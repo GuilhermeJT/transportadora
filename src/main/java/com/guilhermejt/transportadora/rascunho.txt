@@ -1,21 +1,36 @@
 Viagem:
 	data
-	veiculo (carreta/bitrem)
-	motorista
-	origem
-	destino
-	km
-	valor/km
-	pedagio
-	quantidade de animais
+	~veiculo (carreta/bitrem)
+	~motorista
+	~origem
+	~destin
+	~km
+	~valor/km
+	~pedagio
+	 ~quantidade de animais
+	animal
 
-motorista:
+//motorista:
 	nome
 	senha
 
-veiculo:
+
+//veiculo:
 	tipo(carreta/bitrem)
-	placa
+	placa~
+
+//Fazendas:
+	nome
+	dono
+	municipio
+
+//Municipio:
+	nome
+	estado
+
+Animal:
+	tipo(vaca/bo)
+
 
 
 

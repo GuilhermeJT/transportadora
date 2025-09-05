@@ -4,25 +4,21 @@ package com.guilhermejt.transportadora.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "veiculo")
-public class Veiculo {
+@Table(name = "municipio")
+public class Municipio {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @Column(name = "tipo_veiculo")
-    private String tipoVeiculo;
+    private String nome;
 
-    @Column(name = "placa")
-    private String placa;
-
+    private String Estado;
 
 }
