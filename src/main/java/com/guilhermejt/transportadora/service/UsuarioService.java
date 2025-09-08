@@ -32,4 +32,19 @@ public class UsuarioService {
         repository.deleteById(id);
     }
 
+    public void atualizarUsuario(Integer id, Usuario novosDados){
+        Usuario usuario = repository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        if(novosDados.getNome() != null){
+            usuario.setNome(novosDados.getNome());
+        }
+
+        if(novosDados.getPassword() != null){
+            usuario.setPassword(passwordEncoder.encode(novosDados.getPassword()));
+        }
+
+        repository.save(usuario);
+
+    }
+
 }

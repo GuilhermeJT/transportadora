@@ -33,4 +33,10 @@ public class UsuarioController {
 
         return ResponseEntity.ok().build();
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateUsuario(@PathVariable Integer id, @RequestBody Usuario usuario){
+        service.atualizarUsuario(id, usuario);
+        return ResponseEntity.ok().build();
+    }
 }

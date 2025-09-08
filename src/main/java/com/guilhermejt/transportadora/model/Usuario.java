@@ -11,7 +11,7 @@ import lombok.*;
 @Entity
 @Table(name = "usuario")
 public class Usuario {
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;

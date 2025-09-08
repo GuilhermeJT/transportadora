@@ -24,6 +24,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/h2-console/**").permitAll()   // libera H2 Console
                         .requestMatchers("/usuario/**").permitAll()      // libera API de Usuario
+                        .requestMatchers("/veiculo/**").permitAll()
                         .anyRequest().authenticated()                    // o resto precisa de login
                 )
                 // Login padrão do Spring Security (se for acessar /login)
