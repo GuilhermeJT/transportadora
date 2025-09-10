@@ -26,6 +26,8 @@ public class SecurityConfig {
                         .requestMatchers("/usuario/**").permitAll()      // libera API de Usuario
                         .requestMatchers("/veiculo/**").permitAll()
                         .requestMatchers("/animal/**").permitAll()
+                        .requestMatchers("/municipio/**").permitAll()
+                        .requestMatchers("/fazenda/**").permitAll()
                         .anyRequest().authenticated()                    // o resto precisa de login
                 )
                 // Login padrão do Spring Security (se for acessar /login)
