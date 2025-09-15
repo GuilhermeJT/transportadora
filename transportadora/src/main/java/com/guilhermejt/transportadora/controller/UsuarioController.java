@@ -6,6 +6,8 @@ import com.guilhermejt.transportadora.service.UsuarioService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @CrossOrigin(origins = "http://127.0.0.1:5500")
 @RestController
 @RequestMapping("/usuario")
@@ -21,6 +23,11 @@ public class UsuarioController {
     public ResponseEntity<Void> salvarUsuario (@RequestBody Usuario usuario){
         service.salvarUsuario(usuario);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Usuario>> getUsuarios(){
+        return ResponseEntity.ok(service.buscarUsuarios());
     }
 
     @GetMapping("/{id}")

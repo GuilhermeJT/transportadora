@@ -6,6 +6,8 @@ import com.guilhermejt.transportadora.service.MunipioService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/municipio")
 public class MunicipioController {
@@ -19,6 +21,11 @@ public class MunicipioController {
     public ResponseEntity<Void> salvarMunicipio(@RequestBody Municipio municipio){
         service.salvarMunicipio(municipio);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Municipio>> buscarMunicipios(){
+        return ResponseEntity.ok(service.buscarMunicipios());
     }
 
     @GetMapping("/{id}")

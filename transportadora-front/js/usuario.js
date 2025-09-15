@@ -19,3 +19,30 @@ async function cadastrarUsuario(event) {
     alert("Erro ao cadastrar usuário. Verifique os dados e tente novamente.");
   }
 }
+
+
+async function carregarDonos() {
+  try {
+    const response = await fetch(API_URL_USUARIO);
+    if (!response.ok) {
+      throw new Error("Erro ao carregar usuários");
+    }
+
+    const usuarios = await response.json();
+    const select = document.getElementById("selectDono");
+
+    // limpa o select (mantém apenas "Selecione...")
+    select.innerHTML = '<option value="">Selecione...</option>';
+
+    usuarios.forEach(u => {
+      const option = document.createElement("option");
+      option.value = u.id;             // id do usuário vai no value
+      option.textContent = u.nome;     // nome do usuário aparece pro usuário
+      select.appendChild(option);
+    });
+  } catch (error) {
+    console.error("Erro:", error);
+    alert("Não foi possível carregar os donos.");
+  }
+}
+

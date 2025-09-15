@@ -1,4 +1,4 @@
-const API_URL_USUARIO = "http://localhost:8080/veiculo"; // ajuste conforme seu endpoint
+const API_URL_VEICULO = "http://localhost:8080/veiculo"; // ajuste conforme seu endpoint
 
 async function cadastrarVeiculo(event) {
   event.preventDefault();
@@ -6,7 +6,7 @@ async function cadastrarVeiculo(event) {
   const tipoVeiculo = document.getElementById("modelo").value;
   const placa = document.getElementById("placa").value;
 
-  const response = await fetch(API_URL_USUARIO, {
+  const response = await fetch(API_URL_VEICULO, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ tipoVeiculo, placa })

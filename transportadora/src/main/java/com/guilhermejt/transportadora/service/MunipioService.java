@@ -6,6 +6,8 @@ import com.guilhermejt.transportadora.model.Veiculo;
 import com.guilhermejt.transportadora.repository.MunicipioRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class MunipioService {
 
@@ -17,6 +19,10 @@ public class MunipioService {
 
     public void salvarMunicipio(Municipio municipio){
         repository.save(municipio);
+    }
+
+    public List<Municipio> buscarMunicipios(){
+        return repository.findAll();
     }
 
     public Municipio buscarMunicipio(Integer id){
