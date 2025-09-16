@@ -47,3 +47,74 @@ async function carregarVeiculos(selectId) {
   }
 }
 
+
+// Listar veículos
+async function carregarVeiculosLista() {
+  const tabela = document.getElementById("tabelaVeiculos");
+  if (!tabela) return; // só executa se existir a tabela na página
+
+  try {
+    const response = await fetch(API_URL_VEICULO);
+    if (!response.ok) throw new Error("Erro ao carregar veículos");
+
+    const veiculos = await response.json();
+    tabela.innerHTML = "";
+
+    if (veiculos.length === 0) {
+      tabela.innerHTML = `
+        <tr>
+          <td colspan="4" class="text-center text-muted">
+            Nenhum veículo cadastrado.
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    veiculos.forEach(v => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${v.id}</td>
+        <td>${v.tipoVeiculo}</td>
+        <td>${v.placa}</td>
+        <td class="text-center">
+          <button class="btn btn-sm btn-warning me-2" onclick="editarVeiculo(${v.id})">Editar</button>
+          <button class="btn btn-sm btn-danger" onclick="deletarVeiculo(${v.id})">Excluir</button>
+        </td>
+      `;
+      tabela.appendChild(tr);
+    });
+  } catch (error) {
+    console.error("Erro:", error);
+    alert("Não foi possível carregar os veículos.");
+  }
+}
+
+// Excluir veículo
+async function deletarVeiculo(id) {
+  if (!confirm("Tem certeza que deseja excluir este veículo?")) return;
+
+  try {
+    const response = await fetch(`${API_URL_VEICULO}/${id}`, {
+      method: "DELETE"
+    });
+
+    if (response.ok) {
+      alert("Veículo excluído com sucesso!");
+      carregarVeiculosLista();
+    } else {
+      alert("Erro ao excluir veículo.");
+    }
+  } catch (error) {
+    console.error("Erro:", error);
+    alert("Não foi possível excluir o veículo.");
+  }
+}
+
+// Editar veículo
+function editarVeiculo(id) {
+  window.location.href = `editar_veiculo.html?id=${id}`;
+}
+
+// Executa só quando a página carregar
+document.addEventListener("DOMContentLoaded", carregarVeiculosLista);

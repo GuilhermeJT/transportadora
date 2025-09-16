@@ -46,3 +46,74 @@ async function carregarAnimais(selectId) {
     alert("Não foi possível carregar os Animais.");
   }
 }
+
+
+async function carregarAnimaisLista() {
+  const tabela = document.getElementById("tabelaAnimais");
+  if (!tabela) return; // protege: se não tiver tabela, não faz nada
+
+  try {
+    const response = await fetch(API_URL_ANIMAL);
+    if (!response.ok) throw new Error("Erro ao carregar animais");
+
+    const animais = await response.json();
+    tabela.innerHTML = ""; 
+
+    if (animais.length === 0) {
+      tabela.innerHTML = `
+        <tr>
+          <td colspan="3" class="text-center text-muted">
+            Nenhum animal cadastrado.
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    animais.forEach(a => {
+      const tr = document.createElement("tr");
+
+      tr.innerHTML = `
+        <td>${a.id}</td>
+        <td>${a.nomeAnimal}</td>
+        <td class="text-center">
+          <button class="btn btn-sm btn-warning me-2" onclick="window.editarAnimal(${a.id})">Editar</button>
+          <button class="btn btn-sm btn-danger" onclick="window.deletarAnimal(${a.id})">Excluir</button>
+        </td>
+      `;
+
+      tabela.appendChild(tr);
+    });
+  } catch (error) {
+    console.error("Erro:", error);
+    alert("Não foi possível carregar os animais.");
+  }
+}
+
+// 👉 funções expostas no objeto global
+window.deletarAnimal = async function(id) {
+  if (!confirm("Tem certeza que deseja excluir este animal?")) return;
+
+  try {
+    const response = await fetch(`${API_URL_ANIMAL}/${id}`, {
+      method: "DELETE"
+    });
+
+    if (response.ok) {
+      alert("Animal excluído com sucesso!");
+      carregarAnimaisLista();
+    } else {
+      alert("Erro ao excluir animal.");
+    }
+  } catch (error) {
+    console.error("Erro:", error);
+    alert("Não foi possível excluir o animal.");
+  }
+};
+
+window.editarAnimal = function(id) {
+  window.location.href = `editar_animal.html?id=${id}`;
+};
+
+// garante o carregamento inicial (só chama se existir tabela)
+document.addEventListener("DOMContentLoaded", carregarAnimaisLista);
