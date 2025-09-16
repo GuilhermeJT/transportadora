@@ -5,6 +5,8 @@ import com.guilhermejt.transportadora.model.Animal;
 import com.guilhermejt.transportadora.repository.AnimalRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AnimalService {
 
@@ -16,6 +18,10 @@ public class AnimalService {
 
     public void salvarAnimalNovo(Animal animal){
         repository.save(animal);
+    }
+
+    public List<Animal> getAnimais(){
+        return repository.findAll();
     }
 
     public Animal buscarAnimal(Integer id){

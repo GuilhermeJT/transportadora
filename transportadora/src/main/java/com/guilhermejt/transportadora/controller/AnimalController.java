@@ -5,6 +5,8 @@ import com.guilhermejt.transportadora.service.AnimalService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/animal")
 public class AnimalController {
@@ -19,6 +21,11 @@ public class AnimalController {
     public ResponseEntity<Void> salvarAnimal(@RequestBody Animal animalNovo){
         service.salvarAnimalNovo(animalNovo);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Animal>> getAnimais(){
+        return ResponseEntity.ok(service.getAnimais());
     }
 
     @GetMapping("/{id}")

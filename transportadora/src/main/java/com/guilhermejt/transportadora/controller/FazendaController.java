@@ -6,6 +6,8 @@ import com.guilhermejt.transportadora.service.FazendaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/fazenda")
 public class FazendaController {
@@ -20,6 +22,11 @@ public class FazendaController {
     public ResponseEntity<Fazenda> createFazenda(@RequestBody Fazenda fazenda){
         Fazenda faz = service.saveFazenda(fazenda);
         return ResponseEntity.ok(faz);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Fazenda>> getFazendas(){
+        return ResponseEntity.ok(service.getFazendas());
     }
 
     @GetMapping("/{id}")

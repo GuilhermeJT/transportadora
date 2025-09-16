@@ -6,6 +6,8 @@ import com.guilhermejt.transportadora.service.VeiculoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/veiculo")
@@ -21,6 +23,11 @@ public class VeiculoController {
     public ResponseEntity<Void> salvarVeiculo(@RequestBody Veiculo veiculo){
         service.salvarVeiculo(veiculo);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Veiculo>> buscarVeiculos(){
+        return ResponseEntity.ok(service.getVeiculos());
     }
 
 

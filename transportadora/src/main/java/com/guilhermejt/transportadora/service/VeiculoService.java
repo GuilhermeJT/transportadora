@@ -4,6 +4,8 @@ import com.guilhermejt.transportadora.model.Veiculo;
 import com.guilhermejt.transportadora.repository.VeiculoRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class VeiculoService {
 
@@ -16,6 +18,10 @@ public class VeiculoService {
 
     public void salvarVeiculo(Veiculo veiculo){
         repository.save(veiculo);
+    }
+
+    public List<Veiculo> getVeiculos(){
+        return repository.findAll();
     }
 
     public Veiculo buscarVeiculo(Integer id){

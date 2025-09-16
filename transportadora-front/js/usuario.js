@@ -21,7 +21,7 @@ async function cadastrarUsuario(event) {
 }
 
 
-async function carregarDonos() {
+async function carregarDonos(selectId) {
   try {
     const response = await fetch(API_URL_USUARIO);
     if (!response.ok) {
@@ -29,7 +29,7 @@ async function carregarDonos() {
     }
 
     const usuarios = await response.json();
-    const select = document.getElementById("selectDono");
+    const select = document.getElementById(selectId);
 
     // limpa o select (mantém apenas "Selecione...")
     select.innerHTML = '<option value="">Selecione...</option>';
@@ -45,4 +45,6 @@ async function carregarDonos() {
     alert("Não foi possível carregar os donos.");
   }
 }
+
+
 

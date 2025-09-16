@@ -21,7 +21,7 @@ async function cadastroMunicipio(event) {
 }
 
 
-async function carregarMunicipios() {
+async function carregarMunicipios(selectId) {
   try {
     const response = await fetch(API_URL_MUNICIPIO);
     if (!response.ok) {
@@ -29,7 +29,7 @@ async function carregarMunicipios() {
     }
 
     const municipios = await response.json();
-    const select = document.getElementById("selectMuni");
+    const select = document.getElementById(selectId);
 
     // limpa o select (mantém apenas "Selecione...")
     select.innerHTML = '<option value="">Selecione...</option>';

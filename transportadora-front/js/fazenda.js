@@ -24,3 +24,29 @@ async function cadastroFazenda(event) {
     alert("Erro ao cadastrar Fazenda. Verifique os dados e tente novamente.");
   }
 }
+
+
+async function carregarFazendas(selectId) {
+  try {
+    const response = await fetch(API_URL_FAZENDA);
+    if (!response.ok) {
+      throw new Error("Erro ao carregar Fazendas");
+    }
+
+    const fazendas = await response.json();
+    const select = document.getElementById(selectId);
+
+    // limpa o select (mantém apenas "Selecione...")
+    select.innerHTML = '<option value="">Selecione...</option>';
+
+    fazendas.forEach(v => {
+      const option = document.createElement("option");
+      option.value = v.id; 
+      option.textContent = v.nome_fazenda; 
+      select.appendChild(option);
+    });
+  } catch (error) {
+    console.error("Erro:", error);
+    alert("Não foi possível carregar as fazendas.");
+  }
+}
