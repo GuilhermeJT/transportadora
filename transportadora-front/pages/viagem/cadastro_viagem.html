@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cadastrar Viagem</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/css/cadastro_viagem.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</head>
+<body onload="carregarDonos(); carregarMunicipios();" >
+    <header id="menu-container"></header>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-7 col-sm-12">
+            <div class="card shadow-lg">
+            <div class="card-body">
+                <h2 class="h4 mb-4 text-center">Cadastro de Viagem</h2>
+
+                <form onsubmit="cadastroFazenda(event)">                             
+                
+                    <div class="input-group mb-3">
+                        <label class="input-group-text" for="selectMotorista">Motorista</label>
+                        <select class="form-select" id="selectMotorista">
+                            <option value>Selecione...</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <label class="input-group-text" for="selectVeiculo">Veículo</label>
+                        <select class="form-select" id="selectVeiculo">
+                            <option value>Selecione...</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <label class="input-group-text" for="selectOrigem">Origem</label>
+                        <select class="form-select" id="selectOrigem">
+                            <option value>Selecione...</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <label class="input-group-text" for="selectDestino">Destino</label>
+                        <select class="form-select" id="selectDestino">
+                            <option value>Selecione...</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <label class="input-group-text" for="selectAnimal">Animal</label>
+                        <select class="form-select" id="selectAnimal">
+                            <option value>Selecione...</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="valorPorKm" class="form-label">Quantidade de animal</label>
+                        <div class="input-group mb-3">
+                            <input type="number" id="valorPorKm" class="form-control" placeholder="Ex: 38" min="0" step="1" required>
+                        </div>
+                    </div>
+
+
+                    <div class="mb-3">
+                        <label for="dataViagem" class="form-label">Data da Viagem</label>
+                        <input type="date" id="dataViagem" class="form-control">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="kmPercorrido" class="form-label">Quantos KM foi percorrido</label>
+                        <div class="input-group mb-3">
+                            <input type="number" id="kmPercorrido" class="form-control" placeholder="Ex: 250" min="0" step="0.1" required>
+                            <span class="input-group-text">km</span>
+                        </div>
+                        
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="valorPorKm" class="form-label">Valor por KM</label>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">R$</span>
+                            <input type="number" id="valorPorKm" class="form-control" placeholder="Ex: 4,5" min="0" step="0.1" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="valorPorKm" class="form-label">Valor gasto em pedágios</label>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text">R$</span>
+                            <input type="number" id="valorPorKm" class="form-control" placeholder="Ex: 100" min="0" step="0.1" required>
+                        </div>
+                    </div>
+            
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">Cadastrar</button>
+                </div>
+                </form>
+
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+  <script src="../../js/usuario.js"></script>
+  <script src="../../js/municipio.js"></script>
+  <script src="../../js/fazenda.js"></script>
+  <script src="../../js/menu.js"></script>
+</body>
+</html>

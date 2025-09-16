@@ -43,6 +43,8 @@ public class Viagem {
     @JoinColumn(name = "animal")
     private Animal animal;
 
+    private Integer qtdAnimais;
+
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate data;
 
@@ -52,7 +54,7 @@ public class Viagem {
 
     private Double valorGastoPegadio;
 
-    private Integer qtdAnimais;
+
 
 
 
