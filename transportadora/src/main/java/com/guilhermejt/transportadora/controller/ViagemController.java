@@ -6,6 +6,8 @@ import com.guilhermejt.transportadora.service.ViagemService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/viagem")
 public class ViagemController {
@@ -20,6 +22,11 @@ public class ViagemController {
     public ResponseEntity<Viagem> createViagem(@RequestBody Viagem viagem){
         Viagem via = service.saveViagem(viagem);
         return ResponseEntity.ok(via);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Viagem>> getViagens(){
+        return ResponseEntity.ok(service.getViagens());
     }
 
     @GetMapping("/{id}")

@@ -5,6 +5,8 @@ import com.guilhermejt.transportadora.model.Viagem;
 import com.guilhermejt.transportadora.repository.ViagemRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ViagemService {
     private final ViagemRepository repository;
@@ -15,6 +17,10 @@ public class ViagemService {
 
     public Viagem saveViagem(Viagem viagem){
         return repository.save(viagem);
+    }
+
+    public List<Viagem> getViagens(){
+        return repository.findAll();
     }
 
     public Viagem getViagem(Integer id){
