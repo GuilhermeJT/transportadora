@@ -45,3 +45,77 @@ async function carregarMunicipios(selectId) {
     alert("Não foi possível carregar os municipios.");
   }
 }
+
+
+
+async function carregarMunicipiosLista() {
+  const tabela = document.getElementById("tabelaMunicipios");
+  if (!tabela) return; 
+
+  try {
+    const response = await fetch(API_URL_MUNICIPIO);
+    if (!response.ok) throw new Error("Erro ao carregar municípios");
+
+    const municipio = await response.json();
+    tabela.innerHTML = ""; 
+
+    if (municipio.length === 0) {
+      tabela.innerHTML = `
+        <tr>
+          <td colspan="4" class="text-center text-muted">
+            Nenhum município cadastrado.
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    municipio.forEach(a => {
+      const tr = document.createElement("tr");
+
+      tr.innerHTML = `
+        <td>${a.id}</td>
+        <td>${a.nome}</td>
+        <td>${a.estado}</td>
+        <td class="text-center">
+          <button class="btn btn-sm btn-warning me-2" onclick="window.editarMunicipio(${a.id})">Editar</button>
+          <button class="btn btn-sm btn-danger" onclick="window.deletarMunicipio(${a.id})">Excluir</button>
+        </td>
+      `;
+
+      tabela.appendChild(tr);
+    });
+  } catch (error) {
+    console.error("Erro:", error);
+    alert("Não foi possível carregar os municípios.");
+  }
+}
+
+// 👉 funções expostas no objeto global
+window.deletarMunicipio = async function(id) {
+  if (!confirm("Tem certeza que deseja excluir este município?")) return;
+
+  try {
+    const response = await fetch(`${API_URL_MUNICIPIO}/${id}`, {
+      method: "DELETE"
+    });
+
+    if (response.ok) {
+      alert("município excluído com sucesso!");
+      carregarMunicipiosLista();
+    } else {
+      alert("Erro ao excluir município.");
+    }
+  } catch (error) {
+    console.error("Erro:", error);
+    alert("Não foi possível excluir o município.");
+  }
+};
+
+window.editarMunicipio = function(id) {
+  window.location.href = `edidar_municipio.html?id=${id}`;
+};
+
+// garante o carregamento inicial (só chama se existir tabela)
+document.addEventListener("DOMContentLoaded", carregarMunicipiosLista);
+
