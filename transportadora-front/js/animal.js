@@ -20,6 +20,58 @@ async function cadastrarAnimal(event) {
   }
 }
 
+// ---------------------------//
+// pega o id da URL 
+function getAnimaisIdFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("id");
+}
+
+// carrega dados para preencher os campos
+async function carregarAnimais() {
+  const id = getAnimaisIdFromUrl();
+  if (!id) return;
+
+  try {
+    const response = await fetch(`${API_URL_ANIMAL}/${id}`);
+    if (!response.ok) throw new Error("Erro ao carregar animal");
+
+    const animal = await response.json();
+    document.getElementById("nome").value = animal.nomeAnimal;
+  } catch (error) {
+    console.error("Erro:", error);
+    alert("Não foi possível carregar o animal.");
+  }
+}
+
+// atualiza os dados
+async function updateAnimal(event) {
+  event.preventDefault();
+
+  const id = getAnimaisIdFromUrl();
+  const nomeAnimal = document.getElementById("nome").value;
+
+  try {
+    const response = await fetch(`${API_URL_ANIMAL}/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({nomeAnimal})
+    });
+
+    if (response.ok) {
+      alert("Animal atualizado com sucesso!");
+      window.location.href = "listar_animal.html";
+    } else {
+      alert("Erro ao editar animal. Verifique os dados e tente novamente.");
+    }
+  } catch (error) {
+    console.error("Erro:", error);
+    alert("Erro ao atualizar animal.");
+  }
+}
+
+// -------------------------------------------//
+
 
 
 async function carregarAnimais(selectId) {
@@ -116,4 +168,4 @@ window.editarAnimal = function(id) {
 };
 
 // garante o carregamento inicial (só chama se existir tabela)
-document.addEventListener("DOMContentLoaded", carregarAnimaisLista);
+document.addEventListener("DOMContentLoaded", carregarAnimaisLista, carregarAnimais);

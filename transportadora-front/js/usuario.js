@@ -20,6 +20,57 @@ async function cadastrarUsuario(event) {
   }
 }
 
+// pega o id da URL (ex: editar_usuario.html?id=3)
+function getUsuarioIdFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("id");
+}
+
+// carrega dados do usuário para preencher os campos
+async function carregarUsuario() {
+  const id = getUsuarioIdFromUrl();
+  if (!id) return;
+
+  try {
+    const response = await fetch(`${API_URL_USUARIO}/${id}`);
+    if (!response.ok) throw new Error("Erro ao carregar usuário");
+
+    const usuario = await response.json();
+    document.getElementById("nome").value = usuario.nome;
+    document.getElementById("password").value = usuario.password;
+  } catch (error) {
+    console.error("Erro:", error);
+    alert("Não foi possível carregar o usuário.");
+  }
+}
+
+// atualiza os dados do usuário
+async function updateUsuario(event) {
+  event.preventDefault();
+
+  const id = getUsuarioIdFromUrl();
+  const nome = document.getElementById("nome").value;
+  const password = document.getElementById("password").value;
+
+  try {
+    const response = await fetch(`${API_URL_USUARIO}/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ nome, password })
+    });
+
+    if (response.ok) {
+      alert("Usuário atualizado com sucesso!");
+      window.location.href = "listar_usuario.html";
+    } else {
+      alert("Erro ao editar usuário. Verifique os dados e tente novamente.");
+    }
+  } catch (error) {
+    console.error("Erro:", error);
+    alert("Erro ao atualizar usuário.");
+  }
+}
+
 
 async function carregarDonos(selectId) {
   try {
@@ -115,4 +166,4 @@ window.editarUsuario = function(id) {
 };
 
 // garante o carregamento inicial (só chama se existir tabela)
-document.addEventListener("DOMContentLoaded", carregarUsuariosLista);
+document.addEventListener("DOMContentLoaded", carregarUsuariosLista, carregarUsuario);
