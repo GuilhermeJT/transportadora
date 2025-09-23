@@ -51,11 +51,14 @@ async function updateAnimal(event) {
   const id = getAnimaisIdFromUrl();
   const nomeAnimal = document.getElementById("nome").value;
 
+  const payload = {};
+  if(nomeAnimal) payload.nomeAnimal = nomeAnimal;
+
   try {
     const response = await fetch(`${API_URL_ANIMAL}/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({nomeAnimal})
+      body: JSON.stringify(payload)
     });
 
     if (response.ok) {

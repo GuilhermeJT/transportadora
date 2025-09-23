@@ -20,6 +20,65 @@ async function cadastrarVeiculo(event) {
   }
 }
 
+// ---------------------------//
+// pega o id da URL 
+
+function getVeiculosIdFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("id");
+}
+
+// carrega dados para preencher os campos
+async function carregarVeiculos() {
+  const id = getVeiculosIdFromUrl();
+  if (!id) return;
+
+  try {
+    const response = await fetch(`${API_URL_VEICULO}/${id}`);
+    if (!response.ok) throw new Error("Erro ao carregar veiculo");
+
+    const veiculo = await response.json();
+    document.getElementById("modelo").value = veiculo.tipoVeiculo;
+    document.getElementById("placa").value = veiculo.placa;
+  } catch (error) {
+    console.error("Erro:", error);
+    alert("Não foi possível carregar o veiculo.");
+  }
+}
+
+// atualiza os dados
+async function updateVeiculo(event) {
+  event.preventDefault();
+
+  const id = getVeiculosIdFromUrl();
+  const tipoVeiculo = document.getElementById("modelo").value;
+  const placa = document.getElementById("placa").value;
+
+  const payload = {};
+  if(tipoVeiculo) payload.tipoVeiculo = tipoVeiculo;
+  if(placa) payload.placa = placa;
+
+  try {
+    const response = await fetch(`${API_URL_VEICULO}/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    if (response.ok) {
+      alert("veiculo atualizado com sucesso!");
+      window.location.href = "listar_veiculo.html";
+    } else {
+      alert("Erro ao editar veiculo. Verifique os dados e tente novamente.");
+    }
+  } catch (error) {
+    console.error("Erro:", error);
+    alert("Erro ao atualizar veiculo.");
+  }
+}
+
+// -------------------------------------------//
+
 
 
 async function carregarVeiculos(selectId) {
@@ -117,4 +176,4 @@ function editarVeiculo(id) {
 }
 
 // Executa só quando a página carregar
-document.addEventListener("DOMContentLoaded", carregarVeiculosLista);
+document.addEventListener("DOMContentLoaded", carregarVeiculosLista, carregarVeiculos);

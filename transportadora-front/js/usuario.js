@@ -52,11 +52,16 @@ async function updateUsuario(event) {
   const nome = document.getElementById("nome").value;
   const password = document.getElementById("password").value;
 
+  // monta o JSON só com os campos preenchidos
+  const payload = {};
+  if (nome) payload.nome = nome;
+  if (password) payload.password = password;
+
   try {
     const response = await fetch(`${API_URL_USUARIO}/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nome, password })
+      body: JSON.stringify(payload)
     });
 
     if (response.ok) {

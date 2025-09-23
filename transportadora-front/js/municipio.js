@@ -20,6 +20,62 @@ async function cadastroMunicipio(event) {
   }
 }
 
+// <---->
+function getMunicipioIdFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("id");
+}
+
+// carrega dados do usuário para preencher os campos
+async function carregarMunicipios() {
+  const id = getMunicipioIdFromUrl();
+  if (!id) return;
+
+  try {
+    const response = await fetch(`${API_URL_MUNICIPIO}/${id}`);
+    if (!response.ok) throw new Error("Erro ao carregar Município");
+
+    const municipio = await response.json();
+    document.getElementById("nome").value = municipio.nome;
+    document.getElementById("estado").value = municipio.estado;
+  } catch (error) {
+    console.error("Erro:", error);
+    alert("Não foi possível carregar o Município.");
+  }
+}
+
+// atualiza os dados do usuário
+async function updateMunicipio(event) {
+  event.preventDefault();
+
+  const id = getMunicipioIdFromUrl();
+  const nome = document.getElementById("nome").value;
+  const estado = document.getElementById("estado").value;
+
+  // monta o JSON só com os campos preenchidos
+  const payload = {};
+  if (nome) payload.nome = nome;
+  if (estado) payload.estado = estado;
+
+  try {
+    const response = await fetch(`${API_URL_MUNICIPIO}/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    if (response.ok) {
+      alert("Usuário atualizado com sucesso!");
+      window.location.href = "listar_municipio.html";
+    } else {
+      alert("Erro ao editar Município. Verifique os dados e tente novamente.");
+    }
+  } catch (error) {
+    console.error("Erro:", error);
+    alert("Erro ao atualizar Município.");
+  }
+}
+
 
 async function carregarMunicipios(selectId) {
   try {
@@ -113,9 +169,9 @@ window.deletarMunicipio = async function(id) {
 };
 
 window.editarMunicipio = function(id) {
-  window.location.href = `edidar_municipio.html?id=${id}`;
+  window.location.href = `editar_municipio.html?id=${id}`;
 };
 
 // garante o carregamento inicial (só chama se existir tabela)
-document.addEventListener("DOMContentLoaded", carregarMunicipiosLista);
+document.addEventListener("DOMContentLoaded", carregarMunicipiosLista, carregarMunicipios);
 
