@@ -67,8 +67,8 @@ public class ViagemService {
             viagem.setValorPorKm(dadosNovos.getValorPorKm());
         }
 
-        if(dadosNovos.getValorGastoPegadio() != null){
-            viagem.setValorGastoPegadio(dadosNovos.getValorGastoPegadio());
+        if(dadosNovos.getValorGastoPedagio() != null){
+            viagem.setValorGastoPedagio(dadosNovos.getValorGastoPedagio());
         }
 
         if(dadosNovos.getQtdAnimais() != null){

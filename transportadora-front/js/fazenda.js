@@ -25,6 +25,70 @@ async function cadastroFazenda(event) {
   }
 }
 
+// -------------------
+
+function getFazendaIdFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("id");
+}
+
+
+async function carregarFazenda() {
+  const id = getFazendaIdFromUrl();
+  if (!id) return;
+
+  try {
+    const response = await fetch(`${API_URL_FAZENDA}/${id}`);
+    if (!response.ok) throw new Error("Erro ao carregar Fazenda");
+
+    const fazenda = await response.json();
+    document.getElementById("nome").value = fazenda.nome_fazenda;
+    document.getElementById("selectDono").value = fazenda.dono.id;
+    document.getElementById("selectMuni").value = fazenda.municipio.id;
+    
+  } catch (error) {
+    console.error("Erro:", error);
+    alert("Não foi possível carregar o Fazenda.");
+  }
+}
+
+// atualiza os dados do usuário
+async function updateFazenda(event) {
+  event.preventDefault();
+
+  const id = getFazendaIdFromUrl();
+  const nome = document.getElementById("nome").value;
+  const donoId = document.getElementById("selectDono").value;
+  const municipioId = document.getElementById("selectMuni").value;
+
+  // monta o JSON só com os campos preenchidos
+  const payload = {};
+  if(nome) payload.nome_fazenda = nome;
+  if (donoId) payload.dono = {id: parseInt(donoId)};
+  if (municipioId) payload.municipio = {id: parseInt(municipioId)};
+
+  try {
+    const response = await fetch(`${API_URL_FAZENDA}/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    if (response.ok) {
+      alert("Fazenda atualizado com sucesso!");
+      window.location.href = "listar_fazenda.html";
+    } else {
+      alert("Erro ao editar Fazenda. Verifique os dados e tente novamente.");
+    }
+  } catch (error) {
+    console.error("Erro:", error);
+    alert("Erro ao atualizar Fazenda.");
+  }
+}
+
+
+// -------------------
+
 
 async function carregarFazendas(selectId) {
   try {
@@ -121,6 +185,6 @@ window.editarFazenda = function(id) {
   window.location.href = `editar_fazenda.html?id=${id}`;
 };
 
-// garante o carregamento inicial (só chama se existir tabela)
-document.addEventListener("DOMContentLoaded", carregarFazendasLista);
+// garante o carregamento inicial (só chama se existir tabela)  
+document.addEventListener("DOMContentLoaded", carregarFazendasLista, carregarFazenda);
 

@@ -52,7 +52,7 @@ public class Viagem {
 
     private Double valorPorKm;
 
-    private Double valorGastoPegadio;
+    private Double valorGastoPedagio;
 
 
 

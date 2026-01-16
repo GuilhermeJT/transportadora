@@ -21,6 +21,6 @@ public class Animal {
     @Column(name = "nome_animal")
     private String nomeAnimal;
 
-
+    
 
 }

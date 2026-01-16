@@ -16,7 +16,7 @@ async function cadastroViagem(event) {
 
   const km = document.getElementById("kmPercorrido").value;
   const valorPorKm = document.getElementById("valorPorKm").value;
-  const valorGastoPegadio = document.getElementById("valorPedagios").value;
+  const valorGastoPedagio = document.getElementById("valorPedagios").value;
 
 
   const response = await fetch(API_URL_VIAGEM, {
@@ -32,7 +32,7 @@ async function cadastroViagem(event) {
       data,
       km,
       valorPorKm,
-      valorGastoPegadio
+      valorGastoPedagio
     })
   });
 
@@ -44,6 +44,107 @@ async function cadastroViagem(event) {
     alert("Erro ao cadastrar Viagem. Verifique os dados e tente novamente.");
   }
 }
+
+// -------------------
+
+function getViagemIdFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("id");
+}
+
+
+async function carregarViagem() {
+  const id = getViagemIdFromUrl();
+  if (!id) return;
+
+  try {
+    const response = await fetch(`${API_URL_VIAGEM}/${id}`);
+    if (!response.ok) throw new Error("Erro ao carregar Viagem");
+
+    const viagem = await response.json();
+    document.getElementById("selectMotorista").value = viagem.motorista?.id || "";
+    document.getElementById("selectVeiculo").value = viagem.veiculo?.id || "";
+    document.getElementById("selectOrigem").value = viagem.origem?.id || "";
+    document.getElementById("selectDestino").value = viagem.destino?.id || "";
+    document.getElementById("selectAnimal").value = viagem.animal?.id || "";
+    document.getElementById("qtdAnimais").value = viagem.qtdAnimais ?? "";
+    
+    // converter dd/MM/yyyy -> yyyy-MM-dd para o input
+    if (viagem.data) {
+      const partes = viagem.data.split("/");
+      document.getElementById("dataViagem").value = `${partes[2]}-${partes[1]}-${partes[0]}`;
+    }
+
+    document.getElementById("kmPercorrido").value = viagem.km ?? "";
+    document.getElementById("valorPorKm").value = viagem.valorPorKm ?? "";
+    document.getElementById("valorPedagios").value = viagem.valorGastoPedagio ?? "";
+  } catch (error) {
+    console.error("Erro:", error);
+    alert("Não foi possível carregar a Viagem.");
+  }
+}
+
+async function updateViagem(event) {
+  event.preventDefault();
+
+  const id = getViagemIdFromUrl();
+  const motorista = document.getElementById("selectMotorista").value;
+  const veiculo = document.getElementById("selectVeiculo").value;
+  const origem = document.getElementById("selectOrigem").value;
+  const destino = document.getElementById("selectDestino").value;
+  const animal = document.getElementById("selectAnimal").value;
+  const qtdAnimais = document.getElementById("qtdAnimais").value;
+
+  const dataInput = document.getElementById("dataViagem").value; 
+  let data = null;
+  if (dataInput) {
+    const partes = dataInput.split("-"); // yyyy-MM-dd
+    data = `${partes[2]}/${partes[1]}/${partes[0]}`; // dd/MM/yyyy
+  }
+
+  const kmPercorrido = document.getElementById("kmPercorrido").value;
+  const valorPorKm = document.getElementById("valorPorKm").value;
+  const pedagios = document.getElementById("valorPedagios").value;
+
+  const payload = {};
+  if (motorista) payload.motorista = { id: parseInt(motorista) };
+  if (veiculo) payload.veiculo = { id: parseInt(veiculo) };
+  if (origem) payload.origem = { id: parseInt(origem) };
+  if (destino) payload.destino = { id: parseInt(destino) };
+  if (animal) payload.animal = { id: parseInt(animal) };
+
+  if (qtdAnimais) payload.qtdAnimais = parseInt(qtdAnimais);
+  if (data) payload.data = data;
+  if (kmPercorrido) payload.km = parseInt(kmPercorrido);
+  if (valorPorKm) payload.valorPorKm = parseFloat(valorPorKm);
+  if (pedagios) payload.valorGastoPedagio = parseFloat(pedagios);
+
+  console.log("Payload enviado:", payload); // debug
+
+  try {
+    const response = await fetch(`${API_URL_VIAGEM}/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    if (response.ok) {
+      alert("Viagem atualizada com sucesso!");
+      window.location.href = "listar_viagem.html";
+    } else {
+      const errorText = await response.text();
+      console.error("Erro backend:", errorText);
+      alert("Erro ao editar Viagem: " + errorText);
+    }
+  } catch (error) {
+    console.error("Erro:", error);
+    alert("Erro ao atualizar Viagem.");
+  }
+}
+
+
+
+// -------------------
 
 
 async function carregarViagensLista() {
@@ -82,7 +183,7 @@ async function carregarViagensLista() {
         <td>${a.data}</td>
         <td>${a.km}</td>
         <td>${a.valorPorKm}</td>
-        <td>${a.valorGastoPegadio}</td>
+        <td>${a.valorGastoPedagio}</td>
         <td class="text-center">
           <button class="btn btn-sm btn-warning me-2" onclick="window.editarViagem(${a.id})">Editar</button>
           <button class="btn btn-sm btn-danger" onclick="window.deletarViagem(${a.id})">Excluir</button>
