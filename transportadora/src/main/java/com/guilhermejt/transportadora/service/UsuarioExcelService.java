@@ -44,7 +44,7 @@ public class UsuarioExcelService {
 
                 row.createCell(0).setCellValue(u.getId());
                 row.createCell(1).setCellValue(u.getNome());
-                row.createCell(2).setCellValue(u.getPassword());
+//                row.createCell(2).setCellValue(u.getPassword());
             }
 
             workbook.write(out);

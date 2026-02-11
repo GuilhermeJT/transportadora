@@ -20,31 +20,6 @@ public class Viagem {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-
-    @ManyToOne
-    @JoinColumn(name = "motorista_id")
-    private Usuario motorista;
-
-
-    @ManyToOne
-    @JoinColumn(name = "veiculo_id")
-    private Veiculo veiculo;
-
-    @ManyToOne
-    @JoinColumn(name = "origem")
-    private Fazenda origem;
-
-    @ManyToOne
-    @JoinColumn(name = "destino")
-    private Fazenda destino;
-
-
-    @ManyToOne
-    @JoinColumn(name = "animal")
-    private Animal animal;
-
-    private Integer qtdAnimais;
-
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate data;
 
@@ -54,9 +29,23 @@ public class Viagem {
 
     private Double valorGastoPedagio;
 
+    private Integer quantidadeAnimais;
 
+    @ManyToOne
+    @JoinColumn(name = "motorista_id")
+    private Usuario motorista;
 
+    @ManyToOne
+    @JoinColumn(name = "veiculo_id")
+    private Veiculo veiculo;
 
+    @ManyToOne
+    @JoinColumn(name = "fazenda_origem")
+    private Fazenda origem;
+
+    @ManyToOne
+    @JoinColumn(name = "fazenda_destino")
+    private Fazenda destino;
 
 
 }

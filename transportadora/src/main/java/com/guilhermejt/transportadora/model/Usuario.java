@@ -19,8 +19,8 @@ public class Usuario {
     @Column(name = "nome")
     private String nome;
 
-    @Column(nullable = false, name = "password")
-    private String password;
+//    @Column(nullable = false, name = "password")
+//    private String password;
 
 
 }

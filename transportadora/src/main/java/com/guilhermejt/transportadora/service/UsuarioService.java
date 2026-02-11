@@ -19,8 +19,8 @@ public class UsuarioService {
     }
 
     public void salvarUsuario(Usuario usuario){
-        String senhaCriptografada = passwordEncoder.encode(usuario.getPassword());
-        usuario.setPassword(senhaCriptografada);
+//        String senhaCriptografada = passwordEncoder.encode(usuario.getPassword());
+//        usuario.setPassword(senhaCriptografada);
         repository.save(usuario);
     }
 
@@ -45,9 +45,9 @@ public class UsuarioService {
             usuario.setNome(novosDados.getNome());
         }
 
-        if(novosDados.getPassword() != null){
-            usuario.setPassword(passwordEncoder.encode(novosDados.getPassword()));
-        }
+//        if(novosDados.getPassword() != null){
+//            usuario.setPassword(passwordEncoder.encode(novosDados.getPassword()));
+//        }
 
         repository.save(usuario);
 

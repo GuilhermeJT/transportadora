@@ -50,10 +50,9 @@ public class ViagemService {
             viagem.setDestino(dadosNovos.getDestino());
         }
 
-        if(dadosNovos.getAnimal() != null){
-            viagem.setAnimal(dadosNovos.getAnimal());
+        if(dadosNovos.getQuantidadeAnimais() != null) {
+            viagem.setQuantidadeAnimais(dadosNovos.getQuantidadeAnimais());
         }
-
 
         if(dadosNovos.getData() != null){
             viagem.setData(dadosNovos.getData());
@@ -69,10 +68,6 @@ public class ViagemService {
 
         if(dadosNovos.getValorGastoPedagio() != null){
             viagem.setValorGastoPedagio(dadosNovos.getValorGastoPedagio());
-        }
-
-        if(dadosNovos.getQtdAnimais() != null){
-            viagem.setQtdAnimais(dadosNovos.getQtdAnimais());
         }
 
         return repository.save(viagem);
