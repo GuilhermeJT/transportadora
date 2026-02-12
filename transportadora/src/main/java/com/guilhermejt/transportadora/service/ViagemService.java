@@ -54,8 +54,16 @@ public class ViagemService {
             viagem.setQuantidadeAnimais(dadosNovos.getQuantidadeAnimais());
         }
 
-        if(dadosNovos.getData() != null){
-            viagem.setData(dadosNovos.getData());
+        if(dadosNovos.getDataEmbarque() != null){
+            viagem.setDataEmbarque(dadosNovos.getDataEmbarque());
+        }
+
+//        if(dadosNovos.getDesconto() != null){
+//            viagem.setDesconto(dadosNovos.getDesconto());
+//        }
+
+        if(dadosNovos.getDataDesembarque() != null){
+            viagem.setDataDesembarque(dadosNovos.getDataDesembarque());
         }
 
         if(dadosNovos.getKm() != null){

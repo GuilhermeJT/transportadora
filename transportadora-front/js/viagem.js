@@ -11,7 +11,11 @@ async function cadastroViagem(event) {
 
   const dataInput = document.getElementById("dataViagem").value;
   const partes = dataInput.split("-"); 
-  const data = `${partes[2]}/${partes[1]}/${partes[0]}`;
+  const dataEmbarque = `${partes[2]}/${partes[1]}/${partes[0]}`;
+
+  const dataInputDesem = document.getElementById("dataDesembarque").value;
+  const partesDesem = dataInputDesem.split("-"); 
+  const dataDesembarque = `${partesDesem[2]}/${partesDesem[1]}/${partesDesem[0]}`;
 
   const km = document.getElementById("kmPercorrido").value;
   const valorPorKm = document.getElementById("valorPorKm").value;
@@ -27,7 +31,8 @@ async function cadastroViagem(event) {
       origem: { id: parseInt(origem) },
       destino: { id: parseInt(destino) },
       quantidadeAnimais,
-      data,
+      dataEmbarque,
+      dataDesembarque,
       km,
       valorPorKm,
       valorGastoPedagio
@@ -67,9 +72,15 @@ async function carregarViagem() {
     document.getElementById("quantidadeAnimais").value = viagem.quantidadeAnimais ?? "";
     
     // converter dd/MM/yyyy -> yyyy-MM-dd para o input
-    if (viagem.data) {
-      const partes = viagem.data.split("/");
+    if (viagem.dataEmbarque) {
+      const partes = viagem.dataEmbarque.split("/");
       document.getElementById("dataViagem").value = `${partes[2]}-${partes[1]}-${partes[0]}`;
+    }
+
+    // converter dd/MM/yyyy -> yyyy-MM-dd para o input
+    if (viagem.dataDesembarque) {
+      const partes = viagem.dataDesembarque.split("/");
+      document.getElementById("dataDesembarque").value = `${partes[2]}-${partes[1]}-${partes[0]}`;
     }
 
     document.getElementById("kmPercorrido").value = viagem.km ?? "";
@@ -98,6 +109,13 @@ async function updateViagem(event) {
     data = `${partes[2]}/${partes[1]}/${partes[0]}`; // dd/MM/yyyy
   }
 
+  const dataDesembarque = document.getElementById("dataDesembarque").value; 
+  let dataDesem = null;
+  if (dataDesembarque) {
+    const partesDesem = dataDesembarque.split("-"); // yyyy-MM-dd
+    dataDesem = `${partesDesem[2]}/${partesDesem[1]}/${partesDesem[0]}`; // dd/MM/yyyy
+  }
+
   const kmPercorrido = document.getElementById("kmPercorrido").value;
   const valorPorKm = document.getElementById("valorPorKm").value;
   const pedagios = document.getElementById("valorPedagios").value;
@@ -109,7 +127,8 @@ async function updateViagem(event) {
   if (destino) payload.destino = { id: parseInt(destino) };
 
   if (quantidadeAnimais) payload.quantidadeAnimais = parseInt(quantidadeAnimais);
-  if (data) payload.data = data;
+  if (data) payload.dataEmbarque = data;
+  if (dataDesem) payload.dataDesembarque = dataDesem;
   if (kmPercorrido) payload.km = parseInt(kmPercorrido);
   if (valorPorKm) payload.valorPorKm = parseFloat(valorPorKm);
   if (pedagios) payload.valorGastoPedagio = parseFloat(pedagios);
@@ -174,7 +193,8 @@ async function carregarViagensLista() {
         <td>${a.origem ? a.origem.nome_fazenda : "Sem fazenda"}</td>
         <td>${a.destino ? a.destino.nome_fazenda : "Sem fazenda"}</td>
         <td>${a.quantidadeAnimais}</td>
-        <td>${a.data}</td>
+        <td>${a.dataEmbarque}</td>
+        <td>${a.dataDesembarque}</td>
         <td>${a.km}</td>
         <td>${a.valorPorKm}</td>
         <td>${a.valorGastoPedagio}</td>

@@ -21,7 +21,10 @@ public class Viagem {
     private Integer id;
 
     @JsonFormat(pattern = "dd/MM/yyyy")
-    private LocalDate data;
+    private LocalDate dataEmbarque;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate dataDesembarque;
 
     private Integer km;
 
@@ -30,6 +33,8 @@ public class Viagem {
     private Double valorGastoPedagio;
 
     private Integer quantidadeAnimais;
+
+    //private Double desconto;
 
     @ManyToOne
     @JoinColumn(name = "motorista_id")
