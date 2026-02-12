@@ -21,6 +21,10 @@ async function cadastroViagem(event) {
   const valorPorKm = document.getElementById("valorPorKm").value;
   const valorGastoPedagio = document.getElementById("valorPedagios").value;
 
+  const desconto = document.getElementById("desconto").value;
+
+
+
 
   const response = await fetch(API_URL_VIAGEM, {
     method: "POST",
@@ -35,7 +39,8 @@ async function cadastroViagem(event) {
       dataDesembarque,
       km,
       valorPorKm,
-      valorGastoPedagio
+      valorGastoPedagio,
+      desconto
     })
   });
 
@@ -86,6 +91,9 @@ async function carregarViagem() {
     document.getElementById("kmPercorrido").value = viagem.km ?? "";
     document.getElementById("valorPorKm").value = viagem.valorPorKm ?? "";
     document.getElementById("valorPedagios").value = viagem.valorGastoPedagio ?? "";
+    document.getElementById("desconto").value = viagem.valorGastoPedagio ?? "";
+
+
   } catch (error) {
     console.error("Erro:", error);
     alert("Não foi possível carregar a Viagem.");
@@ -119,6 +127,7 @@ async function updateViagem(event) {
   const kmPercorrido = document.getElementById("kmPercorrido").value;
   const valorPorKm = document.getElementById("valorPorKm").value;
   const pedagios = document.getElementById("valorPedagios").value;
+  const desconto = document.getElementById("desconto").value;
 
   const payload = {};
   if (motorista) payload.motorista = { id: parseInt(motorista) };
@@ -132,6 +141,7 @@ async function updateViagem(event) {
   if (kmPercorrido) payload.km = parseInt(kmPercorrido);
   if (valorPorKm) payload.valorPorKm = parseFloat(valorPorKm);
   if (pedagios) payload.valorGastoPedagio = parseFloat(pedagios);
+  if (desconto) payload.desconto = parseFloat(desconto);
 
   console.log("Payload enviado:", payload); // debug
 
@@ -187,7 +197,6 @@ async function carregarViagensLista() {
       const tr = document.createElement("tr");
 
       tr.innerHTML = `
-        <td>${a.id}</td>
         <td>${a.motorista ? a.motorista.nome : "Sem motorista"}</td>
         <td>${a.veiculo ? a.veiculo.placa : "Sem Veiculo"}</td>
         <td>${a.origem ? a.origem.nome_fazenda : "Sem fazenda"}</td>
@@ -198,6 +207,9 @@ async function carregarViagensLista() {
         <td>${a.km}</td>
         <td>${a.valorPorKm}</td>
         <td>${a.valorGastoPedagio}</td>
+        <td>${a.desconto}</td>
+        <td>R$${a.total}</td>
+        
         <td class="text-center">
           <button class="btn btn-sm btn-warning me-2" onclick="window.editarViagem(${a.id})">Editar</button>
           <button class="btn btn-sm btn-danger" onclick="window.deletarViagem(${a.id})">Excluir</button>

@@ -16,6 +16,7 @@ public class ViagemService {
     }
 
     public Viagem saveViagem(Viagem viagem){
+        viagem.calcularTotal();
         return repository.save(viagem);
     }
 
@@ -58,9 +59,9 @@ public class ViagemService {
             viagem.setDataEmbarque(dadosNovos.getDataEmbarque());
         }
 
-//        if(dadosNovos.getDesconto() != null){
-//            viagem.setDesconto(dadosNovos.getDesconto());
-//        }
+        if(dadosNovos.getDesconto() != null){
+            viagem.setDesconto(dadosNovos.getDesconto());
+        }
 
         if(dadosNovos.getDataDesembarque() != null){
             viagem.setDataDesembarque(dadosNovos.getDataDesembarque());
@@ -76,6 +77,10 @@ public class ViagemService {
 
         if(dadosNovos.getValorGastoPedagio() != null){
             viagem.setValorGastoPedagio(dadosNovos.getValorGastoPedagio());
+        }
+
+        if(dadosNovos.getTotal() != null){
+            viagem.setTotal(dadosNovos.getTotal());
         }
 
         return repository.save(viagem);

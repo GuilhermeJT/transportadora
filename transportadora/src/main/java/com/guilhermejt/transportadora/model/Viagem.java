@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.math.BigDecimal;
+
 
 @Getter
 @Setter
@@ -28,13 +30,15 @@ public class Viagem {
 
     private Integer km;
 
-    private Double valorPorKm;
+    private BigDecimal valorPorKm;
 
-    private Double valorGastoPedagio;
+    private BigDecimal valorGastoPedagio;
 
     private Integer quantidadeAnimais;
 
-    //private Double desconto;
+    private BigDecimal desconto;
+
+    private BigDecimal total;
 
     @ManyToOne
     @JoinColumn(name = "motorista_id")
@@ -51,6 +55,18 @@ public class Viagem {
     @ManyToOne
     @JoinColumn(name = "fazenda_destino")
     private Fazenda destino;
+
+
+    public void calcularTotal(){
+
+        BigDecimal kmValue = BigDecimal.valueOf(km);
+
+        this.total = valorPorKm
+                .multiply(kmValue)
+                .add(valorGastoPedagio)
+                .subtract(desconto);
+    }
+
 
 
 }
