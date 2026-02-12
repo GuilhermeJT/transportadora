@@ -9,7 +9,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </head>
 <body onload="carregarDonos('selectMotorista'); carregarVeiculos('selectVeiculo'); carregarFazendas('selectOrigem'); 
-carregarFazendas('selectDestino'); carregarAnimais('selectAnimal')" >
+carregarFazendas('selectDestino');" >
     <header id="menu-container"></header>
     <div class="container mt-5">
         <div class="row justify-content-center">
@@ -28,7 +28,7 @@ carregarFazendas('selectDestino'); carregarAnimais('selectAnimal')" >
                     </div>
 
                     <div class="input-group mb-3">
-                        <label class="input-group-text" for="selectVeiculo">Veículo</label>
+                        <label class="input-group-text" for="selectVeiculo">Placa Veículo</label>
                         <select class="form-select" id="selectVeiculo">
                             <option value>Selecione...</option>
                         </select>
@@ -48,17 +48,11 @@ carregarFazendas('selectDestino'); carregarAnimais('selectAnimal')" >
                         </select>
                     </div>
 
-                    <div class="input-group mb-3">
-                        <label class="input-group-text" for="selectAnimal">Animal</label>
-                        <select class="form-select" id="selectAnimal">
-                            <option value>Selecione...</option>
-                        </select>
-                    </div>
 
                     <div class="mb-3">
                         <label for="valorPorKm" class="form-label">Quantidade de animal</label>
                         <div class="input-group mb-3">
-                            <input type="number" id="qtdAnimais" class="form-control" placeholder="Ex: 38" min="0" step="1" >
+                            <input type="number" id="quantidadeAnimais" class="form-control" placeholder="Ex: 38" min="0" step="1" >
                         </div>
                     </div>
 
@@ -110,7 +104,6 @@ carregarFazendas('selectDestino'); carregarAnimais('selectAnimal')" >
   <script src="../../js/fazenda.js"></script>
   <script src="../../js/menu.js"></script>
   <script src="../../js/veiculo.js"></script>
-  <script src="../../js/animal.js"></script>
   <script src="../../js/viagem.js"></script>
 
 

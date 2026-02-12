@@ -4,12 +4,12 @@ async function cadastrarUsuario(event) {
   event.preventDefault();
 
   const nome = document.getElementById("nome").value;
-  const password = document.getElementById("password").value;
+  //const password = document.getElementById("password").value;
 
   const response = await fetch(API_URL_USUARIO, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ nome, password })
+    body: JSON.stringify({nome})
   });
 
   if (response.ok) {
@@ -37,7 +37,7 @@ async function carregarUsuario() {
 
     const usuario = await response.json();
     document.getElementById("nome").value = usuario.nome;
-    document.getElementById("password").value = usuario.password;
+    // document.getElementById("password").value = usuario.password;
   } catch (error) {
     console.error("Erro:", error);
     alert("Não foi possível carregar o usuário.");
@@ -50,12 +50,12 @@ async function updateUsuario(event) {
 
   const id = getUsuarioIdFromUrl();
   const nome = document.getElementById("nome").value;
-  const password = document.getElementById("password").value;
+  // const password = document.getElementById("password").value;
 
   // monta o JSON só com os campos preenchidos
   const payload = {};
   if (nome) payload.nome = nome;
-  if (password) payload.password = password;
+  // if (password) payload.password = password;
 
   try {
     const response = await fetch(`${API_URL_USUARIO}/${id}`, {

@@ -7,8 +7,7 @@ async function cadastroViagem(event) {
   const veiculo = document.getElementById("selectVeiculo").value;
   const origem = document.getElementById("selectOrigem").value;
   const destino = document.getElementById("selectDestino").value;
-  const animal = document.getElementById("selectAnimal").value;
-  const qtdAnimais = document.getElementById("qtdAnimais").value;
+  const quantidadeAnimais = document.getElementById("quantidadeAnimais").value;
 
   const dataInput = document.getElementById("dataViagem").value;
   const partes = dataInput.split("-"); 
@@ -27,8 +26,7 @@ async function cadastroViagem(event) {
       veiculo: { id: parseInt(veiculo) },
       origem: { id: parseInt(origem) },
       destino: { id: parseInt(destino) },
-      animal: { id: parseInt(animal) },
-      qtdAnimais,
+      quantidadeAnimais,
       data,
       km,
       valorPorKm,
@@ -66,8 +64,7 @@ async function carregarViagem() {
     document.getElementById("selectVeiculo").value = viagem.veiculo?.id || "";
     document.getElementById("selectOrigem").value = viagem.origem?.id || "";
     document.getElementById("selectDestino").value = viagem.destino?.id || "";
-    document.getElementById("selectAnimal").value = viagem.animal?.id || "";
-    document.getElementById("qtdAnimais").value = viagem.qtdAnimais ?? "";
+    document.getElementById("quantidadeAnimais").value = viagem.quantidadeAnimais ?? "";
     
     // converter dd/MM/yyyy -> yyyy-MM-dd para o input
     if (viagem.data) {
@@ -92,8 +89,7 @@ async function updateViagem(event) {
   const veiculo = document.getElementById("selectVeiculo").value;
   const origem = document.getElementById("selectOrigem").value;
   const destino = document.getElementById("selectDestino").value;
-  const animal = document.getElementById("selectAnimal").value;
-  const qtdAnimais = document.getElementById("qtdAnimais").value;
+  const quantidadeAnimais = document.getElementById("quantidadeAnimais").value;
 
   const dataInput = document.getElementById("dataViagem").value; 
   let data = null;
@@ -111,9 +107,8 @@ async function updateViagem(event) {
   if (veiculo) payload.veiculo = { id: parseInt(veiculo) };
   if (origem) payload.origem = { id: parseInt(origem) };
   if (destino) payload.destino = { id: parseInt(destino) };
-  if (animal) payload.animal = { id: parseInt(animal) };
 
-  if (qtdAnimais) payload.qtdAnimais = parseInt(qtdAnimais);
+  if (quantidadeAnimais) payload.quantidadeAnimais = parseInt(quantidadeAnimais);
   if (data) payload.data = data;
   if (kmPercorrido) payload.km = parseInt(kmPercorrido);
   if (valorPorKm) payload.valorPorKm = parseFloat(valorPorKm);
@@ -175,11 +170,10 @@ async function carregarViagensLista() {
       tr.innerHTML = `
         <td>${a.id}</td>
         <td>${a.motorista ? a.motorista.nome : "Sem motorista"}</td>
-        <td>${a.veiculo ? a.veiculo.tipoVeiculo : "Sem Veiculo"}</td>
+        <td>${a.veiculo ? a.veiculo.placa : "Sem Veiculo"}</td>
         <td>${a.origem ? a.origem.nome_fazenda : "Sem fazenda"}</td>
         <td>${a.destino ? a.destino.nome_fazenda : "Sem fazenda"}</td>
-        <td>${a.animal ? a.animal.nomeAnimal : "Sem Animal"}</td>
-        <td>${a.qtdAnimais}</td>
+        <td>${a.quantidadeAnimais}</td>
         <td>${a.data}</td>
         <td>${a.km}</td>
         <td>${a.valorPorKm}</td>
