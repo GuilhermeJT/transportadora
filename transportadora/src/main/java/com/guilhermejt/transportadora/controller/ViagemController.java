@@ -6,6 +6,7 @@ import com.guilhermejt.transportadora.service.ViagemService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -22,6 +23,11 @@ public class ViagemController {
     public ResponseEntity<Viagem> createViagem(@RequestBody Viagem viagem){
         Viagem via = service.saveViagem(viagem);
         return ResponseEntity.ok(via);
+    }
+
+    @GetMapping("/filtro")
+    public ResponseEntity<List<Viagem>> filtroViagens(@RequestParam LocalDate inicio, @RequestParam LocalDate fim){
+        return ResponseEntity.ok(service.filtroViagens(inicio, fim));
     }
 
     @GetMapping

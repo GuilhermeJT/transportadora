@@ -5,6 +5,7 @@ import com.guilhermejt.transportadora.model.Viagem;
 import com.guilhermejt.transportadora.repository.ViagemRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -18,6 +19,10 @@ public class ViagemService {
     public Viagem saveViagem(Viagem viagem){
         viagem.calcularTotal();
         return repository.save(viagem);
+    }
+
+    public List<Viagem> filtroViagens(LocalDate inicio, LocalDate fim){
+        return repository.findByDataEmbarqueBetween(inicio, fim);
     }
 
     public List<Viagem> getViagens(){

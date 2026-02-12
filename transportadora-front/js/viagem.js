@@ -100,6 +100,84 @@ async function carregarViagem() {
   }
 }
 
+//---------------------->>
+
+
+async function filtrarViagensPorData(event) {
+  if (event) event.preventDefault();
+
+  const tabela = document.getElementById("tabelaViagens");
+  if (!tabela) return;
+
+  const inicio = document.getElementById("dataInicio").value; // input type="date"
+  const fim = document.getElementById("dataFim").value;
+
+  if (!inicio || !fim) {
+    alert("Selecione a data de início e a data final.");
+    return;
+  }
+
+  if (inicio > fim) {
+    alert("A data de início não pode ser maior que a data final.");
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_URL_VIAGEM}/filtro?inicio=${inicio}&fim=${fim}`);
+    if (!response.ok) throw new Error("Erro ao filtrar Viagens");
+
+    const viagem = await response.json();
+    tabela.innerHTML = "";
+
+    if (viagem.length === 0) {
+      tabela.innerHTML = `
+        <tr>
+          <td colspan="12" class="text-center text-muted">
+            Nenhuma viagem no intervalo informado.
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    viagem.forEach(a => {
+      const tr = document.createElement("tr");
+
+      tr.innerHTML = `
+        <td>${a.motorista ? a.motorista.nome : "Sem motorista"}</td>
+        <td>${a.veiculo ? a.veiculo.placa : "Sem Veiculo"}</td>
+        <td>${a.origem ? a.origem.nome_fazenda : "Sem fazenda"}</td>
+        <td>${a.destino ? a.destino.nome_fazenda : "Sem fazenda"}</td>
+        <td>${a.quantidadeAnimais}</td>
+        <td>${a.dataEmbarque}</td>
+        <td>${a.dataDesembarque}</td>
+        <td>${a.km}</td>
+        <td>${a.valorPorKm}</td>
+        <td>${a.valorGastoPedagio}</td>
+        <td>${a.desconto}</td>
+        <td>R$${a.total}</td>
+        <td class="text-center">
+          <button class="btn btn-sm btn-warning me-2" onclick="window.editarViagem(${a.id})">Editar</button>
+          <button class="btn btn-sm btn-danger" onclick="window.deletarViagem(${a.id})">Excluir</button>
+        </td>
+      `;
+
+      tabela.appendChild(tr);
+    });
+
+  } catch (error) {
+    console.error("Erro:", error);
+    alert("Não foi possível filtrar as Viagens.");
+  }
+}
+
+
+
+
+
+
+//---------------------->>
+
 async function updateViagem(event) {
   event.preventDefault();
 
@@ -249,6 +327,16 @@ window.editarViagem = function(id) {
   window.location.href = `editar_viagem.html?id=${id}`;
 };
 
-// garante o carregamento inicial (só chama se existir tabela)
-document.addEventListener("DOMContentLoaded", carregarViagensLista);
+document.addEventListener("DOMContentLoaded", () => {
+  carregarViagensLista();
+
+  const btnFiltrar = document.getElementById("btnFiltrar");
+  if (btnFiltrar) {
+    btnFiltrar.addEventListener("click", filtrarViagensPorData);
+  }
+});
+
+
+
+
 
