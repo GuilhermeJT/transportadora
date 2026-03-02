@@ -22,6 +22,15 @@ public class Viagem {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
+    @ManyToOne
+    @JoinColumn(name = "responsavel")
+    private Usuario responsavel;
+
+    @ManyToOne
+    @JoinColumn(name = "transportadora")
+    private Empresa transportadora;
+
+
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataEmbarque;
 

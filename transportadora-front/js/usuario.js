@@ -78,22 +78,21 @@ async function updateUsuario(event) {
 
 
 async function carregarDonos(selectId) {
+  const select = document.getElementById(selectId);
+  if (!select) return; // se o select não existe nessa página, ignora
+
   try {
     const response = await fetch(API_URL_USUARIO);
-    if (!response.ok) {
-      throw new Error("Erro ao carregar usuários");
-    }
+    if (!response.ok) throw new Error("Erro ao carregar usuários");
 
     const usuarios = await response.json();
-    const select = document.getElementById(selectId);
 
-    // limpa o select (mantém apenas "Selecione...")
     select.innerHTML = '<option value="">Selecione...</option>';
 
     usuarios.forEach(u => {
       const option = document.createElement("option");
-      option.value = u.id;             // id do usuário vai no value
-      option.textContent = u.nome;     // nome do usuário aparece pro usuário
+      option.value = u.id;
+      option.textContent = u.nome;
       select.appendChild(option);
     });
   } catch (error) {
@@ -170,5 +169,9 @@ window.editarUsuario = function(id) {
   window.location.href = `editar_usuario.html?id=${id}`;
 };
 
-// garante o carregamento inicial (só chama se existir tabela)
-document.addEventListener("DOMContentLoaded", carregarUsuariosLista, carregarUsuario);
+document.addEventListener("DOMContentLoaded", () => {
+  carregarUsuariosLista();
+  carregarUsuario();
+  carregarDonos("selectMotorista");
+  carregarDonos("selectResponsavel");
+});

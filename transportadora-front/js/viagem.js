@@ -3,6 +3,9 @@ const API_URL_VIAGEM = "http://localhost:8080/viagem";
 async function cadastroViagem(event) {
   event.preventDefault();
 
+  const responsavel = document.getElementById("selectResponsavel").value;
+  const transportadora = document.getElementById("selectTransportadora").value;
+
   const motorista = document.getElementById("selectMotorista").value;
   const veiculo = document.getElementById("selectVeiculo").value;
   const origem = document.getElementById("selectOrigem").value;
@@ -30,6 +33,8 @@ async function cadastroViagem(event) {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
+      responsavel: {id: parseInt(responsavel)},
+      transportadora : {id: parseInt(transportadora)},
       motorista: { id: parseInt(motorista)},
       veiculo: { id: parseInt(veiculo) },
       origem: { id: parseInt(origem) },
