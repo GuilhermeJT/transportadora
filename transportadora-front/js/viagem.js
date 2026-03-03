@@ -137,7 +137,7 @@ async function filtrarViagensPorData(event) {
     if (viagem.length === 0) {
       tabela.innerHTML = `
         <tr>
-          <td colspan="15" class="text-center text-muted">
+          <td colspan="14" class="text-center text-muted">
             Nenhuma viagem no intervalo informado.
           </td>
         </tr>
@@ -157,12 +157,12 @@ async function filtrarViagensPorData(event) {
         <td>${a.destino ? a.destino.nome_fazenda : "Sem fazenda"}</td>
         <td>${a.quantidadeAnimais}</td>
         <td>${a.dataEmbarque}</td>
-        <td>${a.dataDesembarque}</td>
         <td>${a.km}</td>
         <td>${a.valorPorKm}</td>
         <td>${a.valorGastoPedagio}</td>
         <td>${a.desconto}</td>
         <td>R$${a.total}</td>
+        
         <td class="text-center">
           <button class="btn btn-sm btn-warning me-2" onclick="window.editarViagem(${a.id})">Editar</button>
           <button class="btn btn-sm btn-danger" onclick="window.deletarViagem(${a.id})">Excluir</button>
@@ -270,7 +270,7 @@ async function carregarViagensLista() {
     if (viagem.length === 0) {
       tabela.innerHTML = `
         <tr>
-          <td colspan="15" class="text-center text-muted">
+          <td colspan="14" class="text-center text-muted">
             Nenhuma viagem cadastrada.
           </td>
         </tr>
@@ -290,7 +290,6 @@ async function carregarViagensLista() {
         <td>${a.destino ? a.destino.nome_fazenda : "Sem fazenda"}</td>
         <td>${a.quantidadeAnimais}</td>
         <td>${a.dataEmbarque}</td>
-        <td>${a.dataDesembarque}</td>
         <td>${a.km}</td>
         <td>${a.valorPorKm}</td>
         <td>${a.valorGastoPedagio}</td>
@@ -298,9 +297,11 @@ async function carregarViagensLista() {
         <td>R$${a.total}</td>
         
         <td class="text-center">
-          <button class="btn btn-sm btn-warning me-2" onclick="window.editarViagem(${a.id})">Editar</button>
+        <div class="d-grid gap-1">
+          <button class="btn btn-sm btn-warning" onclick="window.editarViagem(${a.id})">Editar</button>
           <button class="btn btn-sm btn-danger" onclick="window.deletarViagem(${a.id})">Excluir</button>
-        </td>
+        </div>
+      </td>
       `;
 
       tabela.appendChild(tr);
