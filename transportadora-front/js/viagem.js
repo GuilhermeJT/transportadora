@@ -137,7 +137,7 @@ async function filtrarViagensPorData(event) {
     if (viagem.length === 0) {
       tabela.innerHTML = `
         <tr>
-          <td colspan="12" class="text-center text-muted">
+          <td colspan="15" class="text-center text-muted">
             Nenhuma viagem no intervalo informado.
           </td>
         </tr>
@@ -149,6 +149,8 @@ async function filtrarViagensPorData(event) {
       const tr = document.createElement("tr");
 
       tr.innerHTML = `
+        <td>${a.responsavel ? a.responsavel.nome : "Sem Responsavel"}</td>
+        <td>${a.transportadora ? a.transportadora.nomeEmpresa : "Sem Transportadora"}</td>
         <td>${a.motorista ? a.motorista.nome : "Sem motorista"}</td>
         <td>${a.veiculo ? a.veiculo.placa : "Sem Veiculo"}</td>
         <td>${a.origem ? a.origem.nome_fazenda : "Sem fazenda"}</td>
@@ -268,7 +270,7 @@ async function carregarViagensLista() {
     if (viagem.length === 0) {
       tabela.innerHTML = `
         <tr>
-          <td colspan="12" class="text-center text-muted">
+          <td colspan="15" class="text-center text-muted">
             Nenhuma viagem cadastrada.
           </td>
         </tr>
@@ -280,6 +282,8 @@ async function carregarViagensLista() {
       const tr = document.createElement("tr");
 
       tr.innerHTML = `
+        <td>${a.responsavel ? a.responsavel.nome : "Sem Responsavel"}</td>
+        <td>${a.transportadora ? a.transportadora.nomeEmpresa : "Sem Transportadora"}</td>
         <td>${a.motorista ? a.motorista.nome : "Sem motorista"}</td>
         <td>${a.veiculo ? a.veiculo.placa : "Sem Veiculo"}</td>
         <td>${a.origem ? a.origem.nome_fazenda : "Sem fazenda"}</td>
