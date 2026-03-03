@@ -40,4 +40,10 @@ public class EmpresaController {
         service.excluirEmpresa(id);
         return ResponseEntity.ok().build();
     }
+
+    @PutMapping("{id}")
+    public ResponseEntity<Void> atualizarEmpresa(@PathVariable Integer id, @RequestBody Empresa empresa){
+        service.atualizarEmpresa(id, empresa);
+        return ResponseEntity.ok().build();
+    }
 }
