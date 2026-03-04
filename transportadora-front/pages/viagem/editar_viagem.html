@@ -8,8 +8,8 @@
   <link href="/css/cadastro_viagem.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </head>
-<body onload="carregarDonos('selectMotorista'); carregarVeiculos('selectVeiculo'); carregarFazendas('selectOrigem'); 
-carregarFazendas('selectDestino');" >
+<body onload="carregarVeiculos('selectVeiculo'); carregarFazendas('selectOrigem'); 
+carregarFazendas('selectDestino'); carregarEmpresas('selectTransportadora');" >
     <header id="menu-container"></header>
     <div class="container mt-5">
         <div class="row justify-content-center">
@@ -21,6 +21,21 @@ carregarFazendas('selectDestino');" >
                 <form onsubmit="updateViagem(event)">                             
                 
                     <div class="input-group mb-3">
+                        <label class="input-group-text" for="selectResponsavel">Responsavel</label>
+                        <select class="form-select" id="selectResponsavel">
+                            <option value>Selecione...</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <label class="input-group-text" for="selectTransportadora">Transportadora</label>
+                        <select class="form-select" id="selectTransportadora">
+                            <option value>Selecione...</option>
+                        </select>
+                    </div>
+
+                
+                    <div class="input-group mb-3">
                         <label class="input-group-text" for="selectMotorista">Motorista</label>
                         <select class="form-select" id="selectMotorista">
                             <option value>Selecione...</option>
@@ -28,7 +43,7 @@ carregarFazendas('selectDestino');" >
                     </div>
 
                     <div class="input-group mb-3">
-                        <label class="input-group-text" for="selectVeiculo">Placa Veículo</label>
+                        <label class="input-group-text" for="selectVeiculo">Veículo</label>
                         <select class="form-select" id="selectVeiculo">
                             <option value>Selecione...</option>
                         </select>
@@ -48,11 +63,10 @@ carregarFazendas('selectDestino');" >
                         </select>
                     </div>
 
-
                     <div class="mb-3">
                         <label for="valorPorKm" class="form-label">Quantidade de animal</label>
                         <div class="input-group mb-3">
-                            <input type="number" id="quantidadeAnimais" class="form-control" placeholder="Ex: 38" min="0" step="1" >
+                            <input type="number" id="quantidadeAnimais" class="form-control" placeholder="Ex: 38" min="0" step="1"  >
                         </div>
                     </div>
 
@@ -118,6 +132,7 @@ carregarFazendas('selectDestino');" >
   <script src="../../js/menu.js"></script>
   <script src="../../js/veiculo.js"></script>
   <script src="../../js/viagem.js"></script>
+  <script src="../../js/empresa.js"></script>
 
 
 </body>

@@ -189,6 +189,10 @@ async function updateViagem(event) {
   event.preventDefault();
 
   const id = getViagemIdFromUrl();
+
+  const responsavel = document.getElementById("selectResponsavel").value;
+  const transportadora = document.getElementById("selectTransportadora").value;
+
   const motorista = document.getElementById("selectMotorista").value;
   const veiculo = document.getElementById("selectVeiculo").value;
   const origem = document.getElementById("selectOrigem").value;
@@ -211,10 +215,13 @@ async function updateViagem(event) {
 
   const kmPercorrido = document.getElementById("kmPercorrido").value;
   const valorPorKm = document.getElementById("valorPorKm").value;
-  const pedagios = document.getElementById("valorPedagios").value;
+  const valorGastoPedagio = document.getElementById("valorPedagios").value;
   const desconto = document.getElementById("desconto").value;
 
   const payload = {};
+
+  if(responsavel) payload.responsavel = {id: parseInt(responsavel)};
+  if(transportadora) payload.transportadora = {id: parseInt(transportadora)};
   if (motorista) payload.motorista = { id: parseInt(motorista) };
   if (veiculo) payload.veiculo = { id: parseInt(veiculo) };
   if (origem) payload.origem = { id: parseInt(origem) };
@@ -225,7 +232,7 @@ async function updateViagem(event) {
   if (dataDesem) payload.dataDesembarque = dataDesem;
   if (kmPercorrido) payload.km = parseInt(kmPercorrido);
   if (valorPorKm) payload.valorPorKm = parseFloat(valorPorKm);
-  if (pedagios) payload.valorGastoPedagio = parseFloat(pedagios);
+  if (valorGastoPedagio) payload.valorGastoPedagio = parseFloat(valorGastoPedagio);
   if (desconto) payload.desconto = parseFloat(desconto);
 
   console.log("Payload enviado:", payload); // debug

@@ -38,7 +38,16 @@ public class ViagemService {
     }
 
     public Viagem updateViagem(Integer id, Viagem dadosNovos){
-        Viagem viagem = repository.findById(id).orElseThrow(() -> new RuntimeException("Viagem não encontrada"));
+        Viagem viagem = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Viagem não encontrada"));
+
+        if(dadosNovos.getResponsavel() != null){
+            viagem.setResponsavel(dadosNovos.getResponsavel());
+        }
+
+        if(dadosNovos.getTransportadora() != null){
+            viagem.setTransportadora(dadosNovos.getTransportadora());
+        }
 
         if(dadosNovos.getMotorista() != null){
             viagem.setMotorista(dadosNovos.getMotorista());
@@ -64,10 +73,6 @@ public class ViagemService {
             viagem.setDataEmbarque(dadosNovos.getDataEmbarque());
         }
 
-        if(dadosNovos.getDesconto() != null){
-            viagem.setDesconto(dadosNovos.getDesconto());
-        }
-
         if(dadosNovos.getDataDesembarque() != null){
             viagem.setDataDesembarque(dadosNovos.getDataDesembarque());
         }
@@ -84,12 +89,12 @@ public class ViagemService {
             viagem.setValorGastoPedagio(dadosNovos.getValorGastoPedagio());
         }
 
-        if(dadosNovos.getTotal() != null){
-            viagem.setTotal(dadosNovos.getTotal());
+        if(dadosNovos.getDesconto() != null){
+            viagem.setDesconto(dadosNovos.getDesconto());
         }
+        
+        viagem.calcularTotal();
 
         return repository.save(viagem);
-
-
     }
 }

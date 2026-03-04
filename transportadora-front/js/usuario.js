@@ -28,6 +28,9 @@ function getUsuarioIdFromUrl() {
 
 // carrega dados do usuário para preencher os campos
 async function carregarUsuario() {
+  const inputNome = document.getElementById("nome");
+  if (!inputNome) return; // <-- não está na tela de usuário
+
   const id = getUsuarioIdFromUrl();
   if (!id) return;
 
@@ -36,8 +39,7 @@ async function carregarUsuario() {
     if (!response.ok) throw new Error("Erro ao carregar usuário");
 
     const usuario = await response.json();
-    document.getElementById("nome").value = usuario.nome;
-    // document.getElementById("password").value = usuario.password;
+    inputNome.value = usuario.nome;
   } catch (error) {
     console.error("Erro:", error);
     alert("Não foi possível carregar o usuário.");
