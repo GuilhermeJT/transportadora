@@ -35,8 +35,8 @@ public class DespesaService {
     public Despesa updateDespesa(Integer id, Despesa dadosNovos){
         Despesa des = repository.findById(id).orElseThrow(()-> new RuntimeException("Despesa não encontrada"));
 
-        if(dadosNovos.getData() != null){
-            des.setData(dadosNovos.getData());
+        if(dadosNovos.getDataDespesa() != null){
+            des.setDataDespesa(dadosNovos.getDataDespesa());
         }
 
         if(dadosNovos.getVeiculo() != null){

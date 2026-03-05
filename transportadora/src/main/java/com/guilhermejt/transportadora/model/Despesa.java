@@ -19,8 +19,8 @@ public class Despesa {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "data")
-    private LocalDate data;
+    @Column(name = "data_despesa")
+    private LocalDate dataDespesa;
 
     @ManyToOne
     @JoinColumn(name = "veiculo")
