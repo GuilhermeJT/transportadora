@@ -235,7 +235,7 @@ async function updateViagem(event) {
   if (valorGastoPedagio) payload.valorGastoPedagio = parseFloat(valorGastoPedagio);
   if (desconto) payload.desconto = parseFloat(desconto);
 
-  console.log("Payload enviado:", payload); // debug
+  
 
   try {
     const response = await fetch(`${API_URL_VIAGEM}/${id}`, {
