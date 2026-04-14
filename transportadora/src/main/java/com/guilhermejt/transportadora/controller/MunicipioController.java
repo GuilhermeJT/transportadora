@@ -2,7 +2,7 @@ package com.guilhermejt.transportadora.controller;
 
 
 import com.guilhermejt.transportadora.model.Municipio;
-import com.guilhermejt.transportadora.service.MunipioService;
+import com.guilhermejt.transportadora.service.MunicipioService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,9 +11,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/municipio")
 public class MunicipioController {
-    private final MunipioService service;
+    private final MunicipioService service;
 
-    public MunicipioController(MunipioService service) {
+    public MunicipioController(MunicipioService service) {
         this.service = service;
     }
 

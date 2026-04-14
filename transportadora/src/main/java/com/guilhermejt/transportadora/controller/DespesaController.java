@@ -4,12 +4,11 @@ package com.guilhermejt.transportadora.controller;
 import com.guilhermejt.transportadora.model.Despesa;
 import com.guilhermejt.transportadora.service.DespesaService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/despesa")
 public class DespesaController {
 
