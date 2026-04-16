@@ -14,8 +14,20 @@ public class AbastecimentoService {
         this.repository = repository;
     }
 
-    public Abastecimento saveAbastecimento (Abastecimento abastecimento){
+    public Abastecimento saveAbastecimento(Abastecimento abastecimento){
         abastecimento.calcularTotal();
+
+        Integer veiculoId = abastecimento.getVeiculo().getId();
+
+        var ultimoAbastecimentoOpt = repository.findTopByVeiculoIdOrderByDataDescIdDesc(veiculoId);
+
+        if(ultimoAbastecimentoOpt.isPresent()){
+            Abastecimento ultimo = ultimoAbastecimentoOpt.get();
+            abastecimento.calcularMedia(ultimo.getKmOdometro());
+        } else {
+            abastecimento.setMedia(0.0);
+        }
+
         return repository.save(abastecimento);
     }
 
@@ -70,4 +82,6 @@ public class AbastecimentoService {
 
         return repository.save(abastecimento);
     }
+
+
 }
