@@ -104,6 +104,37 @@ function getViagemIdFromUrl() {
   return params.get("id");
 }
 
+
+//carregar os dados (anteriores) para tela de edição
+async function carregarDespesa() {
+  const id = getViagemIdFromUrl();
+  if (!id) return;
+
+  try {
+    const response = await fetch(`${API_URL_DESPESA}/${id}`);
+    if (!response.ok) throw new Error("Erro ao carregar despesa");
+
+    const d = await response.json();
+
+    if (d.dataDespesa) {
+      const partes = d.dataDespesa.split("T")[0].split("-");
+      document.getElementById("dataDespesa").value = `${partes[0]}-${partes[1]}-${partes[2]}`;
+    }
+    if (d.veiculo) document.getElementById("selectVeiculo").value = d.veiculo.id;
+    if (d.motorista) document.getElementById("selectMotorista").value = d.motorista.id;
+    if (d.descricao) document.getElementById("descricao").value = d.descricao;
+    if (d.empresa) document.getElementById("selectEmpresa").value = d.empresa.id;
+    if (d.nf) document.getElementById("nf").value = d.nf;
+    if (d.valor) document.getElementById("valorDespesa").value = d.valor;
+
+  } catch (error) {
+    console.error("Erro:", error);
+    alert("Não foi possível carregar a despesa.");
+  }
+}
+
+
+
 //update
 async function updateDespesa(event) {
         
@@ -182,5 +213,7 @@ window.editarDespesa = function(id) {
 
 
 document.addEventListener("DOMContentLoaded", () => {
-  carregarDespesaLista();});
+  carregarDespesaLista();
+  carregarDespesa();
+});
 

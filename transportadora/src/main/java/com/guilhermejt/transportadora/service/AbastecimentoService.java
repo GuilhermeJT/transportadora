@@ -80,6 +80,7 @@ public class AbastecimentoService {
 
         abastecimento.calcularTotal();
 
+
         return repository.save(abastecimento);
     }
 

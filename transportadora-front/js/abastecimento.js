@@ -174,8 +174,39 @@ window.editarAbastecimento = function(id) {
   window.location.href = `editar_abastecimento.html?id=${id}`;
 };
 
+//carregar os dados pra tela de edição
+async function carregarAbastecimento() {
+  const id = getAbastecimentoIdFromUrl();
+  if (!id) return;
+
+  try {
+    const response = await fetch(`${API_URL_ABASTECIMENTO}/${id}`);
+    if (!response.ok) throw new Error("Erro ao carregar abastecimento");
+
+    const a = await response.json();
+
+    if (a.data) {
+      const partes = a.data.split("/");
+      document.getElementById("dataAbastecimento").value = `${partes[2]}-${partes[1]}-${partes[0]}`;
+    }
+    if (a.empresa) document.getElementById("selectEmpresa").value = a.empresa.id;
+    if (a.nf) document.getElementById("Nf").value = a.nf;
+    if (a.veiculo) document.getElementById("selectVeiculo").value = a.veiculo.id;
+    if (a.kmOdometro) document.getElementById("kmOdometro").value = a.kmOdometro;
+    if (a.litros) document.getElementById("litros").value = a.litros;
+    if (a.valorUni) document.getElementById("valorUni").value = a.valorUni;
+    if (a.desconto) document.getElementById("desconto").value = a.desconto;
+
+  } catch (error) {
+    console.error("Erro:", error);
+    alert("Não foi possível carregar o abastecimento.");
+  }
+}
+
 
 
 
 document.addEventListener("DOMContentLoaded", () => {
-  carregarAbastecimentoLista();});
+  carregarAbastecimentoLista();
+  carregarAbastecimento();
+});
