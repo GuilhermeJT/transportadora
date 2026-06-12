@@ -27,7 +27,7 @@ function getMunicipioIdFromUrl() {
 }
 
 // carrega dados do usuário para preencher os campos
-async function carregarMunicipios() {
+async function carregarMunicipio() {
   const id = getMunicipioIdFromUrl();
   if (!id) return;
 
@@ -173,5 +173,7 @@ window.editarMunicipio = function(id) {
 };
 
 // garante o carregamento inicial (só chama se existir tabela)
-document.addEventListener("DOMContentLoaded", carregarMunicipiosLista, carregarMunicipios);
-
+document.addEventListener("DOMContentLoaded", () => {
+  carregarMunicipiosLista();
+  carregarMunicipio();
+});

@@ -24,7 +24,7 @@ async function cadastroViagem(event) {
   const valorPorKm = document.getElementById("valorPorKm").value;
   const valorGastoPedagio = document.getElementById("valorPedagios").value;
 
-  const desconto = document.getElementById("desconto").value;
+  const adiantamento = document.getElementById("adiantamento").value;
 
 
 
@@ -45,7 +45,7 @@ async function cadastroViagem(event) {
       km,
       valorPorKm,
       valorGastoPedagio,
-      desconto
+      adiantamento
     })
   });
 
@@ -96,7 +96,7 @@ async function carregarViagem() {
     document.getElementById("kmPercorrido").value = viagem.km ?? "";
     document.getElementById("valorPorKm").value = viagem.valorPorKm ?? "";
     document.getElementById("valorPedagios").value = viagem.valorGastoPedagio ?? "";
-    document.getElementById("desconto").value = viagem.valorGastoPedagio ?? "";
+    document.getElementById("adiantamento").value = viagem.adiantamento ?? "";
 
 
   } catch (error) {
@@ -160,7 +160,7 @@ async function filtrarViagensPorData(event) {
         <td>${a.km}</td>
         <td>${a.valorPorKm}</td>
         <td>${a.valorGastoPedagio}</td>
-        <td>${a.desconto}</td>
+        <td>${a.adiantamento}</td>
         <td>R$${a.total}</td>
         
         <td class="text-center">
@@ -216,7 +216,7 @@ async function updateViagem(event) {
   const kmPercorrido = document.getElementById("kmPercorrido").value;
   const valorPorKm = document.getElementById("valorPorKm").value;
   const valorGastoPedagio = document.getElementById("valorPedagios").value;
-  const desconto = document.getElementById("desconto").value;
+  const adiantamento = document.getElementById("adiantamento").value;
 
   const payload = {};
 
@@ -233,7 +233,7 @@ async function updateViagem(event) {
   if (kmPercorrido) payload.km = parseInt(kmPercorrido);
   if (valorPorKm) payload.valorPorKm = parseFloat(valorPorKm);
   if (valorGastoPedagio) payload.valorGastoPedagio = parseFloat(valorGastoPedagio);
-  if (desconto) payload.desconto = parseFloat(desconto);
+  if (adiantamento) payload.adiantamento = parseFloat(adiantamento);
 
   
 
@@ -300,7 +300,7 @@ async function carregarViagensLista() {
         <td>${a.km}</td>
         <td>${a.valorPorKm}</td>
         <td>${a.valorGastoPedagio}</td>
-        <td>${a.desconto}</td>
+        <td>${a.adiantamento}</td>
         <td>R$${a.total}</td>
         
         <td class="text-center">

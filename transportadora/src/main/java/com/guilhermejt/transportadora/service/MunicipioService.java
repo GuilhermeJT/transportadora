@@ -2,18 +2,17 @@ package com.guilhermejt.transportadora.service;
 
 
 import com.guilhermejt.transportadora.model.Municipio;
-import com.guilhermejt.transportadora.model.Veiculo;
 import com.guilhermejt.transportadora.repository.MunicipioRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class MunipioService {
+public class MunicipioService {
 
     private final MunicipioRepository repository;
 
-    public MunipioService(MunicipioRepository repository) {
+    public MunicipioService(MunicipioRepository repository) {
         this.repository = repository;
     }
 

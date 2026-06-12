@@ -45,7 +45,7 @@ public class Viagem {
 
     private Integer quantidadeAnimais;
 
-    private BigDecimal desconto;
+    private BigDecimal adiantamento;
 
     private BigDecimal total;
 
@@ -73,7 +73,7 @@ public class Viagem {
         this.total = valorPorKm
                 .multiply(kmValue)
                 .add(valorGastoPedagio)
-                .subtract(desconto);
+                .subtract(adiantamento);
     }
 
 

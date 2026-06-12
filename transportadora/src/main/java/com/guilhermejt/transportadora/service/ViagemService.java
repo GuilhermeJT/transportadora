@@ -89,8 +89,8 @@ public class ViagemService {
             viagem.setValorGastoPedagio(dadosNovos.getValorGastoPedagio());
         }
 
-        if(dadosNovos.getDesconto() != null){
-            viagem.setDesconto(dadosNovos.getDesconto());
+        if(dadosNovos.getAdiantamento() != null){
+            viagem.setAdiantamento(dadosNovos.getAdiantamento());
         }
         
         viagem.calcularTotal();

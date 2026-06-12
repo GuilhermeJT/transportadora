@@ -186,5 +186,8 @@ window.editarFazenda = function(id) {
 };
 
 // garante o carregamento inicial (só chama se existir tabela)  
-document.addEventListener("DOMContentLoaded", carregarFazendasLista, carregarFazenda);
+document.addEventListener("DOMContentLoaded", () => {
+  carregarFazendasLista();
+  carregarFazenda();
+});
 

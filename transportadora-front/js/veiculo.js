@@ -29,7 +29,7 @@ function getVeiculosIdFromUrl() {
 }
 
 // carrega dados para preencher os campos
-async function carregarVeiculos() {
+async function carregarVeiculo() {
   const id = getVeiculosIdFromUrl();
   if (!id) return;
 
@@ -176,4 +176,4 @@ function editarVeiculo(id) {
 }
 
 // Executa só quando a página carregar
-document.addEventListener("DOMContentLoaded", carregarVeiculosLista, carregarVeiculos);
+document.addEventListener("DOMContentLoaded", carregarVeiculosLista, carregarVeiculo);
