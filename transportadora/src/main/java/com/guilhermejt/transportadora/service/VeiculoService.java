@@ -35,8 +35,8 @@ public class VeiculoService {
     public void atualizarVeiculo(Integer id, Veiculo dadosNovos){
         Veiculo veiculo = repository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
-        if(dadosNovos.getTipoVeiculo() != null){
-            veiculo.setTipoVeiculo(dadosNovos.getTipoVeiculo());
+        if(dadosNovos.getModelo() != null){
+            veiculo.setModelo(dadosNovos.getModelo());
         }
 
         if(dadosNovos.getPlaca() != null){

@@ -1,62 +1,68 @@
-const API_URL_VEICULO = "http://localhost:8080/veiculo"; // ajuste conforme seu endpoint
+const API_URL_VEICULO = "http://localhost:8080/veiculo";
 
+// Cadastrar veículo
 async function cadastrarVeiculo(event) {
   event.preventDefault();
 
-  const tipoVeiculo = document.getElementById("modelo").value;
+  const modelo = document.getElementById("modelo").value;
   const placa = document.getElementById("placa").value;
 
   const response = await fetch(API_URL_VEICULO, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ tipoVeiculo, placa })
+    body: JSON.stringify({ modelo, placa })
   });
 
   if (response.ok) {
     alert("Veículo cadastrado com sucesso!");
-    window.location.href = "cadastro_veiculo.html"; // redireciona para listagem
+    window.location.href = "listar_veiculo.html";
   } else {
-    alert("Erro ao cadastrar Veículo. Verifique os dados e tente novamente.");
+    alert("Erro ao cadastrar veículo. Verifique os dados e tente novamente.");
   }
 }
 
-// ---------------------------//
-// pega o id da URL 
-
-function getVeiculosIdFromUrl() {
+// Pega o id da URL
+function getVeiculoIdFromUrl() {
   const params = new URLSearchParams(window.location.search);
   return params.get("id");
 }
 
-// carrega dados para preencher os campos
+// Carrega dados para preencher os campos na tela de edição
 async function carregarVeiculo() {
-  const id = getVeiculosIdFromUrl();
+  const id = getVeiculoIdFromUrl();
   if (!id) return;
 
   try {
     const response = await fetch(`${API_URL_VEICULO}/${id}`);
-    if (!response.ok) throw new Error("Erro ao carregar veiculo");
+
+    if (!response.ok) {
+      throw new Error("Erro ao carregar veículo");
+    }
 
     const veiculo = await response.json();
-    document.getElementById("modelo").value = veiculo.tipoVeiculo;
+
+    document.getElementById("modelo").value = veiculo.modelo;
     document.getElementById("placa").value = veiculo.placa;
+
   } catch (error) {
     console.error("Erro:", error);
-    alert("Não foi possível carregar o veiculo.");
+    alert("Não foi possível carregar o veículo.");
   }
 }
 
-// atualiza os dados
+// Atualizar veículo
 async function updateVeiculo(event) {
   event.preventDefault();
 
-  const id = getVeiculosIdFromUrl();
-  const tipoVeiculo = document.getElementById("modelo").value;
+  const id = getVeiculoIdFromUrl();
+
+  const modelo = document.getElementById("modelo").value;
   const placa = document.getElementById("placa").value;
 
   const payload = {};
-  if(tipoVeiculo) payload.tipoVeiculo = tipoVeiculo;
-  if(placa) payload.placa = placa;
+
+  if (modelo) payload.modelo = modelo;
+  if (placa) payload.placa = placa;
 
   try {
     const response = await fetch(`${API_URL_VEICULO}/${id}`, {
@@ -66,24 +72,23 @@ async function updateVeiculo(event) {
     });
 
     if (response.ok) {
-      alert("veiculo atualizado com sucesso!");
+      alert("Veículo atualizado com sucesso!");
       window.location.href = "listar_veiculo.html";
     } else {
-      alert("Erro ao editar veiculo. Verifique os dados e tente novamente.");
+      alert("Erro ao editar veículo. Verifique os dados e tente novamente.");
     }
+
   } catch (error) {
     console.error("Erro:", error);
-    alert("Erro ao atualizar veiculo.");
+    alert("Erro ao atualizar veículo.");
   }
 }
 
-// -------------------------------------------//
-
-
-
+// Carregar veículos em um select
 async function carregarVeiculos(selectId) {
   try {
     const response = await fetch(API_URL_VEICULO);
+
     if (!response.ok) {
       throw new Error("Erro ao carregar veículos");
     }
@@ -91,32 +96,40 @@ async function carregarVeiculos(selectId) {
     const veiculos = await response.json();
     const select = document.getElementById(selectId);
 
-    // limpa o select (mantém apenas "Selecione...")
+    if (!select) return;
+
     select.innerHTML = '<option value="">Selecione...</option>';
 
     veiculos.forEach(v => {
       const option = document.createElement("option");
-      option.value = v.id; 
-      option.textContent = `${v.tipoVeiculo} - ${v.placa}`; 
+
+      option.value = v.id;
+      option.textContent = `${v.modelo} - ${v.placa}`;
+
       select.appendChild(option);
     });
+
   } catch (error) {
     console.error("Erro:", error);
     alert("Não foi possível carregar os veículos.");
   }
 }
 
-
-// Listar veículos
+// Listar veículos na tabela
 async function carregarVeiculosLista() {
   const tabela = document.getElementById("tabelaVeiculos");
-  if (!tabela) return; // só executa se existir a tabela na página
+
+  if (!tabela) return;
 
   try {
     const response = await fetch(API_URL_VEICULO);
-    if (!response.ok) throw new Error("Erro ao carregar veículos");
+
+    if (!response.ok) {
+      throw new Error("Erro ao carregar veículos");
+    }
 
     const veiculos = await response.json();
+
     tabela.innerHTML = "";
 
     if (veiculos.length === 0) {
@@ -132,17 +145,24 @@ async function carregarVeiculosLista() {
 
     veiculos.forEach(v => {
       const tr = document.createElement("tr");
+
       tr.innerHTML = `
         <td>${v.id}</td>
-        <td>${v.tipoVeiculo}</td>
+        <td>${v.modelo}</td>
         <td>${v.placa}</td>
         <td class="text-center">
-          <button class="btn btn-sm btn-warning me-2" onclick="editarVeiculo(${v.id})">Editar</button>
-          <button class="btn btn-sm btn-danger" onclick="deletarVeiculo(${v.id})">Excluir</button>
+          <button class="btn btn-sm btn-warning me-2" onclick="editarVeiculo(${v.id})">
+            Editar
+          </button>
+          <button class="btn btn-sm btn-danger" onclick="deletarVeiculo(${v.id})">
+            Excluir
+          </button>
         </td>
       `;
+
       tabela.appendChild(tr);
     });
+
   } catch (error) {
     console.error("Erro:", error);
     alert("Não foi possível carregar os veículos.");
@@ -164,6 +184,7 @@ async function deletarVeiculo(id) {
     } else {
       alert("Erro ao excluir veículo.");
     }
+
   } catch (error) {
     console.error("Erro:", error);
     alert("Não foi possível excluir o veículo.");
@@ -175,5 +196,8 @@ function editarVeiculo(id) {
   window.location.href = `editar_veiculo.html?id=${id}`;
 }
 
-// Executa só quando a página carregar
-document.addEventListener("DOMContentLoaded", carregarVeiculosLista, carregarVeiculo);
+// Executa quando a página carregar
+document.addEventListener("DOMContentLoaded", () => {
+  carregarVeiculosLista();
+  carregarVeiculo();
+});

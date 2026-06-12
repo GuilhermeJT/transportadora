@@ -1,9 +1,9 @@
 package com.guilhermejt.transportadora.controller;
 
 
-import com.guilhermejt.transportadora.model.Usuario;
+import com.guilhermejt.transportadora.model.Pessoa;
 import com.guilhermejt.transportadora.service.UsuarioExcelService;
-import com.guilhermejt.transportadora.service.UsuarioService;
+import com.guilhermejt.transportadora.service.PessoaService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,30 +16,30 @@ import java.util.List;
 @CrossOrigin(origins = "http://127.0.0.1:5500")
 @RestController
 @RequestMapping("/usuario")
-public class UsuarioController {
+public class PessoaController {
 
-    private final UsuarioService service;
+    private final PessoaService service;
     private final UsuarioExcelService excelService;
 
-    public UsuarioController(UsuarioService service, UsuarioExcelService excelService) {
+    public PessoaController(PessoaService service, UsuarioExcelService excelService) {
         this.service = service;
         this.excelService = excelService;
     }
 
 
     @PostMapping
-    public ResponseEntity<Void> salvarUsuario (@RequestBody Usuario usuario){
-        service.salvarUsuario(usuario);
+    public ResponseEntity<Void> salvarUsuario (@RequestBody Pessoa pessoa){
+        service.salvarUsuario(pessoa);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping
-    public ResponseEntity<List<Usuario>> getUsuarios(){
+    public ResponseEntity<List<Pessoa>> getUsuarios(){
         return ResponseEntity.ok(service.buscarUsuarios());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Usuario> buscarUsuario(@PathVariable Integer id){
+    public ResponseEntity<Pessoa> buscarUsuario(@PathVariable Integer id){
         return ResponseEntity.ok(service.buscarUsuarioId(id));
     }
 
@@ -51,8 +51,8 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateUsuario(@PathVariable Integer id, @RequestBody Usuario usuario){
-        service.atualizarUsuario(id, usuario);
+    public ResponseEntity<Void> updateUsuario(@PathVariable Integer id, @RequestBody Pessoa pessoa){
+        service.atualizarUsuario(id, pessoa);
         return ResponseEntity.ok().build();
     }
 

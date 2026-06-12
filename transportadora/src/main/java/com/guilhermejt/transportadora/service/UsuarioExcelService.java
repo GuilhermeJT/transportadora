@@ -1,7 +1,7 @@
 package com.guilhermejt.transportadora.service;
 
-import com.guilhermejt.transportadora.model.Usuario;
-import com.guilhermejt.transportadora.repository.UsuarioRepository;
+import com.guilhermejt.transportadora.model.Pessoa;
+import com.guilhermejt.transportadora.repository.PessoaRepository;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
@@ -14,9 +14,9 @@ import java.util.List;
 @Service
 public class UsuarioExcelService {
 
-    private final UsuarioRepository repository;
+    private final PessoaRepository repository;
 
-    public UsuarioExcelService(UsuarioRepository repository) {
+    public UsuarioExcelService(PessoaRepository repository) {
         this.repository = repository;
     }
 
@@ -37,9 +37,9 @@ public class UsuarioExcelService {
             }
 
             // Dados
-            List<Usuario> usuarios = repository.findAll();
+            List<Pessoa> pessoas = repository.findAll();
             int rowIdx = 1;
-            for (Usuario u : usuarios) {
+            for (Pessoa u : pessoas) {
                 Row row = sheet.createRow(rowIdx++);
 
                 row.createCell(0).setCellValue(u.getId());

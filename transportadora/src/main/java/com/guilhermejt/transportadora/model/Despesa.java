@@ -28,7 +28,7 @@ public class Despesa {
 
     @ManyToOne
     @JoinColumn(name = "motorista")
-    private Usuario motorista;
+    private Pessoa motorista;
 
 
     @Column(name = "descricao")

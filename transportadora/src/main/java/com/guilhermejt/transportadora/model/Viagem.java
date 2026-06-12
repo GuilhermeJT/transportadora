@@ -24,12 +24,29 @@ public class Viagem {
 
     @ManyToOne
     @JoinColumn(name = "responsavel")
-    private Usuario responsavel;
+    private Pessoa responsavel;
 
     @ManyToOne
     @JoinColumn(name = "transportadora")
     private Empresa transportadora;
 
+    @ManyToOne
+    @JoinColumn(name = "motorista_id")
+    private Pessoa motorista;
+
+    @ManyToOne
+    @JoinColumn(name = "veiculo_id")
+    private Veiculo veiculo;
+
+    @ManyToOne
+    @JoinColumn(name = "fazenda_origem")
+    private Fazenda origem;
+
+    @ManyToOne
+    @JoinColumn(name = "fazenda_destino")
+    private Fazenda destino;
+
+    private Integer quantidadeAnimais;
 
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataEmbarque;
@@ -43,27 +60,14 @@ public class Viagem {
 
     private BigDecimal valorGastoPedagio;
 
-    private Integer quantidadeAnimais;
-
     private BigDecimal adiantamento;
 
     private BigDecimal total;
 
     @ManyToOne
-    @JoinColumn(name = "motorista_id")
-    private Usuario motorista;
+    @JoinColumn(name = "condicao")
+    private Condicao condicao;
 
-    @ManyToOne
-    @JoinColumn(name = "veiculo_id")
-    private Veiculo veiculo;
-
-    @ManyToOne
-    @JoinColumn(name = "fazenda_origem")
-    private Fazenda origem;
-
-    @ManyToOne
-    @JoinColumn(name = "fazenda_destino")
-    private Fazenda destino;
 
 
     public void calcularTotal(){
