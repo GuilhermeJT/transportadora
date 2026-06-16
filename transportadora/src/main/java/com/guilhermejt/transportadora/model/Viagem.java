@@ -72,12 +72,15 @@ public class Viagem {
 
     public void calcularTotal(){
 
-        BigDecimal kmValue = BigDecimal.valueOf(km);
+        BigDecimal valorKm = valorPorKm != null ? valorPorKm : BigDecimal.ZERO;
+        BigDecimal kmValue = km != null ? BigDecimal.valueOf(km) : BigDecimal.ZERO;
+        BigDecimal pedagio = valorGastoPedagio != null ? valorGastoPedagio : BigDecimal.ZERO;
+        BigDecimal adiant = adiantamento != null ? adiantamento : BigDecimal.ZERO;
 
-        this.total = valorPorKm
+        this.total = valorKm
                 .multiply(kmValue)
-                .add(valorGastoPedagio)
-                .subtract(adiantamento);
+                .add(pedagio)
+                .subtract(adiant);
     }
 
 

@@ -34,6 +34,9 @@ function getFazendaIdFromUrl() {
 
 
 async function carregarFazenda() {
+  const selectDono = document.getElementById("selectDono");
+  if (!selectDono) return; // não está na tela de fazenda
+
   const id = getFazendaIdFromUrl();
   if (!id) return;
 
@@ -50,6 +53,16 @@ async function carregarFazenda() {
     console.error("Erro:", error);
     alert("Não foi possível carregar o Fazenda.");
   }
+}
+
+// Editar fazenda: popula os selects (assincrono) e SO DEPOIS preenche os dados
+async function initEditarFazenda() {
+  await Promise.all([
+    carregarDonos('selectDono'),
+    carregarMunicipios('selectMuni')
+  ]);
+
+  await carregarFazenda();
 }
 
 // atualiza os dados do usuário
@@ -188,6 +201,4 @@ window.editarFazenda = function(id) {
 // garante o carregamento inicial (só chama se existir tabela)  
 document.addEventListener("DOMContentLoaded", () => {
   carregarFazendasLista();
-  carregarFazenda();
 });
-

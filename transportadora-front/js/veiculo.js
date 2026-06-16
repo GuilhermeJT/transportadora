@@ -29,6 +29,9 @@ function getVeiculoIdFromUrl() {
 
 // Carrega dados para preencher os campos na tela de edição
 async function carregarVeiculo() {
+  const inputModelo = document.getElementById("modelo");
+  if (!inputModelo) return; // não está na tela de veículo
+
   const id = getVeiculoIdFromUrl();
   if (!id) return;
 

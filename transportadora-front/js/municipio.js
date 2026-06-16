@@ -28,6 +28,9 @@ function getMunicipioIdFromUrl() {
 
 // carrega dados do usuário para preencher os campos
 async function carregarMunicipio() {
+  const inputEstado = document.getElementById("estado");
+  if (!inputEstado) return; // não está na tela de município
+
   const id = getMunicipioIdFromUrl();
   if (!id) return;
 

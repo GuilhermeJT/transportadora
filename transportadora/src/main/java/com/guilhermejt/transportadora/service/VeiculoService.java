@@ -25,7 +25,7 @@ public class VeiculoService {
     }
 
     public Veiculo buscarVeiculo(Integer id){
-        return repository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        return repository.findById(id).orElseThrow(() -> new RuntimeException("Veiculo não encontrado"));
     }
 
     public void excluirVeiculo(Integer id){
@@ -33,7 +33,7 @@ public class VeiculoService {
     }
 
     public void atualizarVeiculo(Integer id, Veiculo dadosNovos){
-        Veiculo veiculo = repository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        Veiculo veiculo = repository.findById(id).orElseThrow(() -> new RuntimeException("Veiculo não encontrado"));
 
         if(dadosNovos.getModelo() != null){
             veiculo.setModelo(dadosNovos.getModelo());
