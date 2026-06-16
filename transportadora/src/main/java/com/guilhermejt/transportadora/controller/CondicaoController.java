@@ -7,6 +7,8 @@ import com.guilhermejt.transportadora.service.CondicaoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/condicao")
 public class CondicaoController {
@@ -21,6 +23,11 @@ public class CondicaoController {
     public ResponseEntity<Void> salvarCondicao(@RequestBody Condicao condicao){
         service.saveCondicao(condicao);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Condicao>> getCondicoes(){
+        return ResponseEntity.ok(service.getCondicoes());
     }
 
     @GetMapping("/{id}")

@@ -92,6 +92,10 @@ public class ViagemService {
         if(dadosNovos.getAdiantamento() != null){
             viagem.setAdiantamento(dadosNovos.getAdiantamento());
         }
+
+        if(dadosNovos.getCondicao() != null){
+            viagem.setCondicao(dadosNovos.getCondicao());
+        }
         
         viagem.calcularTotal();
 

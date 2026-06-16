@@ -29,6 +29,8 @@ async function cadastroViagem(event) {
 
 
 
+  const condicao = document.getElementById("selectCondicao").value;
+
   const response = await fetch(API_URL_VIAGEM, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -45,7 +47,8 @@ async function cadastroViagem(event) {
       km,
       valorPorKm,
       valorGastoPedagio,
-      adiantamento
+      adiantamento,
+      condicao: condicao ? { id: parseInt(condicao) } : null
     })
   });
 
@@ -75,6 +78,8 @@ async function carregarViagem() {
     if (!response.ok) throw new Error("Erro ao carregar Viagem");
 
     const viagem = await response.json();
+    document.getElementById("selectResponsavel").value = viagem.responsavel?.id || "";
+    document.getElementById("selectTransportadora").value = viagem.transportadora?.id || "";
     document.getElementById("selectMotorista").value = viagem.motorista?.id || "";
     document.getElementById("selectVeiculo").value = viagem.veiculo?.id || "";
     document.getElementById("selectOrigem").value = viagem.origem?.id || "";
@@ -97,12 +102,30 @@ async function carregarViagem() {
     document.getElementById("valorPorKm").value = viagem.valorPorKm ?? "";
     document.getElementById("valorPedagios").value = viagem.valorGastoPedagio ?? "";
     document.getElementById("adiantamento").value = viagem.adiantamento ?? "";
+    document.getElementById("selectCondicao").value = viagem.condicao?.id || "";
 
 
   } catch (error) {
     console.error("Erro:", error);
     alert("Não foi possível carregar a Viagem.");
   }
+}
+
+// Orquestra a tela de Editar: popula os selects (assincrono) e SO DEPOIS preenche os dados
+async function initEditarViagem() {
+  // espera todos os selects serem populados antes de setar os valores
+  await Promise.all([
+    carregarDonos('selectResponsavel'),
+    carregarDonos('selectMotorista'),
+    carregarVeiculos('selectVeiculo'),
+    carregarFazendas('selectOrigem'),
+    carregarFazendas('selectDestino'),
+    carregarEmpresas('selectTransportadora'),
+    carregarCondicoes('selectCondicao')
+  ]);
+
+  // agora que as opcoes existem, o .value "pega" corretamente
+  await carregarViagem();
 }
 
 //---------------------->>
@@ -217,6 +240,7 @@ async function updateViagem(event) {
   const valorPorKm = document.getElementById("valorPorKm").value;
   const valorGastoPedagio = document.getElementById("valorPedagios").value;
   const adiantamento = document.getElementById("adiantamento").value;
+  const condicao = document.getElementById("selectCondicao").value;
 
   const payload = {};
 
@@ -234,6 +258,7 @@ async function updateViagem(event) {
   if (valorPorKm) payload.valorPorKm = parseFloat(valorPorKm);
   if (valorGastoPedagio) payload.valorGastoPedagio = parseFloat(valorGastoPedagio);
   if (adiantamento) payload.adiantamento = parseFloat(adiantamento);
+  if (condicao) payload.condicao = { id: parseInt(condicao) };
 
   
 
@@ -352,8 +377,3 @@ document.addEventListener("DOMContentLoaded", () => {
     btnFiltrar.addEventListener("click", filtrarViagensPorData);
   }
 });
-
-
-
-
-

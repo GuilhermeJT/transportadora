@@ -23,6 +23,10 @@ public class CondicaoService {
         return repository.findById(id).orElseThrow(() -> new RuntimeException("Condição não encontrada"));
     }
 
+    public List<Condicao> getCondicoes(){
+        return repository.findAll();
+    }
+
     public void deletarCondicao(Integer id){
         repository.deleteById(id);
     }
