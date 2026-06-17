@@ -28,7 +28,7 @@ public class Despesa {
 
     @ManyToOne
     @JoinColumn(name = "motorista")
-    private Usuario motorista;
+    private Pessoa motorista;
 
 
     @Column(name = "descricao")
@@ -41,6 +41,10 @@ public class Despesa {
     private Integer nf;
 
     private BigDecimal valor;
+
+    @ManyToOne
+    @JoinColumn(name = "condicao")
+    private Condicao condicao;
 
 
 

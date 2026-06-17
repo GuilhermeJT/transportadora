@@ -171,7 +171,29 @@ function editarEmpresa(id) {
 
 
 
+// carrega os dados da empresa para a tela de edição
+async function carregarEmpresa() {
+  const inputCnpj = document.getElementById("cnpj");
+  if (!inputCnpj) return; // não está na tela de empresa
+
+  const id = getEmpresaIdFromUrl();
+  if (!id) return;
+
+  try {
+    const response = await fetch(`${API_URL_EMPRESA}/${id}`);
+    if (!response.ok) throw new Error("Erro ao carregar empresa");
+
+    const empresa = await response.json();
+    document.getElementById("cnpj").value = empresa.cnpj ?? "";
+    document.getElementById("nomeEmpresa").value = empresa.nomeEmpresa ?? "";
+  } catch (error) {
+    console.error("Erro:", error);
+    alert("Não foi possível carregar a empresa.");
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   carregarEmpresasLista();
   carregarEmpresas("selectTransportadora"); // só se existir esse select nessa página
+  carregarEmpresa();
 });

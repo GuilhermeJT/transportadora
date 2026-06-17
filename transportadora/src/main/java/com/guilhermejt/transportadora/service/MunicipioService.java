@@ -25,7 +25,7 @@ public class MunicipioService {
     }
 
     public Municipio buscarMunicipio(Integer id){
-        return repository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        return repository.findById(id).orElseThrow(() -> new RuntimeException("Municipo não encontrado"));
 
     }
 
@@ -34,7 +34,7 @@ public class MunicipioService {
     }
 
     public void atualizarMunicipio(Integer id, Municipio dadosNovos){
-        Municipio municipio = repository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        Municipio municipio = repository.findById(id).orElseThrow(() -> new RuntimeException("Municipo não encontrado"));
 
         if(dadosNovos.getNome() != null){
             municipio.setNome(dadosNovos.getNome());

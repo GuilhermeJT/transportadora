@@ -33,7 +33,7 @@ async function cadastroAbastecimento(event) {
 
   if (response.ok) {
     alert("Abastecimento cadastrado com sucesso!");
-    window.location.href = "cadastro_abastecimento.html"; // redireciona para listagem
+    window.location.href = "listar_abastecimento.html"; 
   } else {
     alert("Erro ao cadastrar Abastecimento. Verifique os dados e tente novamente.");
   }

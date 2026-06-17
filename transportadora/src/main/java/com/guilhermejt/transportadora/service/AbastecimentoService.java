@@ -78,6 +78,10 @@ public class AbastecimentoService {
             abastecimento.setDesconto(dadosNovos.getDesconto());
         }
 
+        if(dadosNovos.getCondicao() != null){
+            abastecimento.setCondicao(dadosNovos.getCondicao());
+        }
+
         abastecimento.calcularTotal();
 
 

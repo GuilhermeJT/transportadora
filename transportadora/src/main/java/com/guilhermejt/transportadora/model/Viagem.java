@@ -24,34 +24,15 @@ public class Viagem {
 
     @ManyToOne
     @JoinColumn(name = "responsavel")
-    private Usuario responsavel;
+    private Pessoa responsavel;
 
     @ManyToOne
     @JoinColumn(name = "transportadora")
     private Empresa transportadora;
 
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private LocalDate dataEmbarque;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private LocalDate dataDesembarque;
-
-    private Integer km;
-
-    private BigDecimal valorPorKm;
-
-    private BigDecimal valorGastoPedagio;
-
-    private Integer quantidadeAnimais;
-
-    private BigDecimal adiantamento;
-
-    private BigDecimal total;
-
     @ManyToOne
     @JoinColumn(name = "motorista_id")
-    private Usuario motorista;
+    private Pessoa motorista;
 
     @ManyToOne
     @JoinColumn(name = "veiculo_id")
@@ -65,15 +46,41 @@ public class Viagem {
     @JoinColumn(name = "fazenda_destino")
     private Fazenda destino;
 
+    private Integer quantidadeAnimais;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate dataEmbarque;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate dataDesembarque;
+
+    private Integer km;
+
+    private BigDecimal valorPorKm;
+
+    private BigDecimal valorGastoPedagio;
+
+    private BigDecimal adiantamento;
+
+    private BigDecimal total;
+
+    @ManyToOne
+    @JoinColumn(name = "condicao")
+    private Condicao condicao;
+
+
 
     public void calcularTotal(){
 
-        BigDecimal kmValue = BigDecimal.valueOf(km);
+        BigDecimal valorKm = valorPorKm != null ? valorPorKm : BigDecimal.ZERO;
+        BigDecimal kmValue = km != null ? BigDecimal.valueOf(km) : BigDecimal.ZERO;
+        BigDecimal pedagio = valorGastoPedagio != null ? valorGastoPedagio : BigDecimal.ZERO;
+        BigDecimal adiant = adiantamento != null ? adiantamento : BigDecimal.ZERO;
 
-        this.total = valorPorKm
+        this.total = valorKm
                 .multiply(kmValue)
-                .add(valorGastoPedagio)
-                .subtract(adiantamento);
+                .add(pedagio)
+                .subtract(adiant);
     }
 
 

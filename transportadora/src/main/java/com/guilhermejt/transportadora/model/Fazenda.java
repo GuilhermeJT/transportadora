@@ -22,7 +22,7 @@ public class Fazenda {
 
     @ManyToOne
     @JoinColumn(name = "dono")
-    private Usuario dono;
+    private Pessoa dono;
 
 
     @ManyToOne
