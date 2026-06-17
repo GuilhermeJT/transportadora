@@ -160,7 +160,7 @@ async function filtrarViagensPorData(event) {
     if (viagem.length === 0) {
       tabela.innerHTML = `
         <tr>
-          <td colspan="14" class="text-center text-muted">
+          <td colspan="15" class="text-center text-muted">
             Nenhuma viagem no intervalo informado.
           </td>
         </tr>
@@ -185,6 +185,7 @@ async function filtrarViagensPorData(event) {
         <td>${a.valorGastoPedagio}</td>
         <td>${a.adiantamento}</td>
         <td>R$${a.total}</td>
+        <td class="text-center">${badgeCondicao(a.condicao)}</td>
         
         <td class="text-center">
           <button class="btn btn-sm btn-warning me-2" onclick="window.editarViagem(${a.id})">Editar</button>
@@ -288,6 +289,17 @@ async function updateViagem(event) {
 // -------------------
 
 
+// selo de cor para a condição (pago = verde, pendente = amarelo)
+function badgeCondicao(condicao) {
+  const status = condicao && condicao.status ? condicao.status : null;
+  if (!status) return '<span class="badge bg-secondary">—</span>';
+  const s = status.toLowerCase();
+  let cls = "bg-secondary";
+  if (s === "pago") cls = "bg-success";
+  else if (s === "pendente") cls = "bg-warning text-dark";
+  return `<span class="badge ${cls}">${status}</span>`;
+}
+
 async function carregarViagensLista() {
   const tabela = document.getElementById("tabelaViagens");
   if (!tabela) return; 
@@ -302,7 +314,7 @@ async function carregarViagensLista() {
     if (viagem.length === 0) {
       tabela.innerHTML = `
         <tr>
-          <td colspan="14" class="text-center text-muted">
+          <td colspan="15" class="text-center text-muted">
             Nenhuma viagem cadastrada.
           </td>
         </tr>
@@ -327,6 +339,7 @@ async function carregarViagensLista() {
         <td>${a.valorGastoPedagio}</td>
         <td>${a.adiantamento}</td>
         <td>R$${a.total}</td>
+        <td class="text-center">${badgeCondicao(a.condicao)}</td>
         
         <td class="text-center">
         <div class="d-grid gap-1">

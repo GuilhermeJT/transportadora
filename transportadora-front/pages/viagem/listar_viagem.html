@@ -6,6 +6,10 @@
   <title>Viagens Cadastrada</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+  <style>
+    /* mantém cada célula em uma linha só; a tabela rola na horizontal se precisar */
+    #tabelaViagens td, .table thead th { white-space: nowrap; vertical-align: middle; }
+  </style>
 </head>
 <body class="bg-light">
   <header id="menu-container"></header>
@@ -13,8 +17,6 @@
   <div class="container mt-4">
     <h2 class="h4 mb-3">Relatório de Viagens</h2>
 
-    <div class="table-responsive">
-      
       <div class="card mb-4">
             <div class="card-body">
 
@@ -45,6 +47,7 @@
             </div>
             </div>
 
+      <div class="table-responsive">
       <table class="table table-sm table-bordered table-hover align-middle">
         <thead class="table-secondary">
           <tr>
@@ -61,6 +64,7 @@
             <th>Pedágios</th>
             <th>Adiantamento</th>
             <th>Total</th>
+            <th class="text-center">Condição</th>
             <th class="text-center">Ações</th>
           </tr>
         </thead>
