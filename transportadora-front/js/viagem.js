@@ -399,11 +399,114 @@ window.editarViagem = function(id) {
   window.location.href = `editar_viagem.html?id=${id}`;
 };
 
+// gera e baixa o PDF das viagens do período filtrado (exige datas)
+window.baixarPdfViagens = async function () {
+  const inicio = document.getElementById("dataInicio").value;
+  const fim = document.getElementById("dataFim").value;
+
+  if (!inicio || !fim) {
+    alert("Selecione a data de início e a data final para baixar o PDF.");
+    return;
+  }
+  if (inicio > fim) {
+    alert("A data de início não pode ser maior que a data final.");
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_URL_VIAGEM}/filtro?inicio=${inicio}&fim=${fim}`);
+    if (!response.ok) throw new Error("Erro ao buscar viagens para o PDF");
+
+    const viagens = await response.json();
+    if (viagens.length === 0) {
+      alert("Nenhuma viagem no período informado.");
+      return;
+    }
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: "landscape", unit: "pt", format: "a4" });
+    const larguraPagina = doc.internal.pageSize.getWidth();
+
+    doc.setFontSize(14);
+    doc.setFont(undefined, "bold");
+    doc.text("FRETE", larguraPagina / 2, 30, { align: "center" });
+
+    const head = [[
+      "RESPONSAVEL", "TRANSPORTADORA", "MOTORISTA", "PLACA", "ORIGEM", "DESTINO",
+      "ANIMAIS", "DATA EMBARQUE", "DATA DESEMBARQUE", "KM", "R$ KM", "PEDAGIOS",
+      "ADIANTAMENTO", "TOTAL", "SITUAÇÃO"
+    ]];
+
+    let somaTotal = 0;
+    const body = viagens.map(v => {
+      somaTotal += Number(v.total || 0);
+      return [
+        v.responsavel ? v.responsavel.nome : "",
+        v.transportadora ? v.transportadora.nomeEmpresa : "",
+        v.motorista ? v.motorista.nome : "",
+        v.veiculo ? v.veiculo.placa : "",
+        v.origem ? v.origem.nome_fazenda : "",
+        v.destino ? v.destino.nome_fazenda : "",
+        v.quantidadeAnimais ?? "",
+        v.dataEmbarque ?? "",
+        v.dataDesembarque ?? "",
+        v.km ?? "",
+        `R$ ${formatarBRL(v.valorPorKm)}`,
+        `R$ ${formatarBRL(v.valorGastoPedagio)}`,
+        `R$ ${formatarBRL(v.adiantamento)}`,
+        `R$ ${formatarBRL(v.total)}`,
+        (v.condicao && v.condicao.status ? v.condicao.status : "").toUpperCase()
+      ];
+    });
+
+    doc.autoTable({
+      head: head,
+      body: body,
+      startY: 42,
+      theme: "grid",
+      styles: { fontSize: 6, cellPadding: 2, lineColor: [0, 0, 0], lineWidth: 0.5, textColor: [0, 0, 0], overflow: "linebreak", valign: "middle" },
+      headStyles: { fillColor: [220, 220, 220], textColor: [0, 0, 0], fontStyle: "bold", halign: "center", valign: "middle" },
+      columnStyles: {
+        3:  { cellWidth: 48, halign: "center" },  // PLACA
+        6:  { cellWidth: 34, halign: "center" },  // ANIMAIS
+        7:  { cellWidth: 52, halign: "center" },  // DATA EMBARQUE
+        8:  { cellWidth: 52, halign: "center" },  // DATA DESEMBARQUE
+        9:  { cellWidth: 30, halign: "center" },  // KM
+        10: { cellWidth: 42, halign: "right" },   // R$ KM
+        11: { cellWidth: 50, halign: "right" },   // PEDAGIOS
+        12: { cellWidth: 58, halign: "right" },   // ADIANTAMENTO
+        13: { cellWidth: 54, halign: "right" },   // TOTAL
+        14: { cellWidth: 52, halign: "center" }   // SITUAÇÃO
+      }
+    });
+
+    const posY = doc.lastAutoTable.finalY + 20;
+    doc.setFontSize(11);
+    doc.setFont(undefined, "bold");
+    doc.text(`TOTAL = R$ ${formatarBRL(somaTotal)}`, larguraPagina - 40, posY, { align: "right" });
+
+    const hoje = new Date();
+    const dd = String(hoje.getDate()).padStart(2, "0");
+    const mm = String(hoje.getMonth() + 1).padStart(2, "0");
+    const aaaa = hoje.getFullYear();
+    doc.save(`FRETES_${dd}_${mm}_${aaaa}.pdf`);
+
+  } catch (error) {
+    console.error("Erro:", error);
+    alert("Não foi possível gerar o PDF.");
+  }
+};
+
 document.addEventListener("DOMContentLoaded", () => {
   carregarViagensLista();
 
   const btnFiltrar = document.getElementById("btnFiltrar");
   if (btnFiltrar) {
     btnFiltrar.addEventListener("click", filtrarViagensPorData);
+  }
+
+  const btnPdf = document.getElementById("btnPdf");
+  if (btnPdf) {
+    btnPdf.addEventListener("click", window.baixarPdfViagens);
   }
 });
