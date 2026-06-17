@@ -42,6 +42,10 @@ public class Despesa {
 
     private BigDecimal valor;
 
+    @ManyToOne
+    @JoinColumn(name = "condicao")
+    private Condicao condicao;
+
 
 
 }

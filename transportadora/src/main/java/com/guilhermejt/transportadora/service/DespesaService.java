@@ -63,6 +63,10 @@ public class DespesaService {
             des.setValor(dadosNovos.getValor());
         }
 
+        if(dadosNovos.getCondicao() != null){
+            des.setCondicao(dadosNovos.getCondicao());
+        }
+
         return repository.save(des);
 
 
