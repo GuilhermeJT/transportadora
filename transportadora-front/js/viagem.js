@@ -157,6 +157,14 @@ async function filtrarViagensPorData(event) {
     const viagem = await response.json();
     tabela.innerHTML = "";
 
+    // soma o total das viagens do período e mostra o faturamento
+    const somaFat = viagem.reduce((acc, v) => acc + Number(v.total || 0), 0);
+    const fat = document.getElementById("faturamentoViagens");
+    if (fat) {
+      fat.textContent = `Faturamento Viagens: R$ ${formatarBRL(somaFat)}`;
+      fat.style.display = "";
+    }
+
     if (viagem.length === 0) {
       tabela.innerHTML = `
         <tr>
@@ -290,6 +298,11 @@ async function updateViagem(event) {
 
 
 // selo de cor para a condição (pago = verde, pendente = amarelo)
+// formata número no padrão R$ brasileiro (1.234,56)
+function formatarBRL(valor) {
+  return Number(valor || 0).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
 function badgeCondicao(condicao) {
   const status = condicao && condicao.status ? condicao.status : null;
   if (!status) return '<span class="badge bg-secondary">—</span>';
@@ -310,6 +323,10 @@ async function carregarViagensLista() {
 
     const viagem = await response.json();
     tabela.innerHTML = ""; 
+
+    // lista completa: esconde o faturamento (só aparece ao filtrar por data)
+    const fat = document.getElementById("faturamentoViagens");
+    if (fat) fat.style.display = "none";
 
     if (viagem.length === 0) {
       tabela.innerHTML = `
