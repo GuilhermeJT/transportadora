@@ -1,0 +1,190 @@
+:root {
+  --sidebar-width: 210px;
+  --sidebar-bg: #071321;
+  --sidebar-bg-2: #0b1b2d;
+  --sidebar-text: #f8fafc;
+  --sidebar-muted: #a7b0bf;
+  --orange: #ff6a00;
+  --orange-dark: #b94d00;
+  --orange-soft: rgba(255, 106, 0, .16);
+  --border-soft: rgba(255, 255, 255, .08);
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  padding-left: var(--sidebar-width);
+  background: #f6f8fb;
+}
+
+.app-sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: var(--sidebar-width);
+  height: 100vh;
+  overflow-y: auto;
+  z-index: 1050;
+  padding: 22px 16px;
+  color: var(--sidebar-text);
+  background: linear-gradient(180deg, var(--sidebar-bg) 0%, var(--sidebar-bg-2) 100%);
+  box-shadow: 14px 0 35px rgba(15, 23, 42, .14);
+}
+
+.app-sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.app-sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, .18);
+  border-radius: 999px;
+}
+
+.sidebar-brand {
+  padding: 0 10px 22px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--border-soft);
+  text-align: center;
+}
+
+.brand-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--sidebar-text);
+  text-decoration: none;
+}
+
+.brand-logo {
+  width: 158px;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.brand-title {
+  font-size: 1.72rem;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -.03em;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 8px;
+}
+
+.sidebar-item,
+.sidebar-subitem,
+.sidebar-group-title {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  min-height: 46px;
+  padding: 11px 14px;
+  border-radius: 10px;
+  color: var(--sidebar-text);
+  background: transparent;
+  text-decoration: none;
+  font-size: .98rem;
+  font-weight: 600;
+  transition: background .2s ease, color .2s ease, transform .2s ease;
+}
+
+.sidebar-item i,
+.sidebar-subitem i,
+.sidebar-group-title i:first-child {
+  width: 22px;
+  min-width: 22px;
+  text-align: center;
+  font-size: 1.12rem;
+  color: currentColor;
+}
+
+.sidebar-item:hover,
+.sidebar-subitem:hover,
+.sidebar-group-title:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, .075);
+  transform: translateX(2px);
+}
+
+.sidebar-item.active,
+.sidebar-subitem.active {
+  color: #fff;
+  background: linear-gradient(90deg, var(--orange) 0%, var(--orange-dark) 100%);
+  box-shadow: 0 10px 24px rgba(255, 106, 0, .24);
+}
+
+.sidebar-group {
+  margin-top: 6px;
+}
+
+.sidebar-group-title {
+  justify-content: space-between;
+  color: var(--orange);
+  font-weight: 800;
+}
+
+.sidebar-group-title span {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.group-arrow {
+  font-size: .84rem;
+  color: var(--sidebar-muted);
+  transition: transform .2s ease;
+}
+
+.sidebar-group:not(.is-open) .group-arrow {
+  transform: rotate(-90deg);
+}
+
+.sidebar-submenu {
+  display: grid;
+  gap: 2px;
+  margin: 2px 0 7px;
+}
+
+.sidebar-group:not(.is-open) .sidebar-submenu {
+  display: none;
+}
+
+.sidebar-subitem {
+  min-height: 40px;
+  padding-top: 9px;
+  padding-bottom: 9px;
+  padding-left: 26px;
+  color: #e5e9f0;
+  font-weight: 500;
+}
+
+.sidebar-subitem i {
+  color: #f1f5f9;
+  opacity: .92;
+}
+
+@media (max-width: 991.98px) {
+  body {
+    padding-left: 0;
+  }
+
+  .app-sidebar {
+    position: relative;
+    width: 100%;
+    height: auto;
+    border-radius: 0;
+  }
+
+  .brand-logo {
+    width: 124px;
+  }
+}

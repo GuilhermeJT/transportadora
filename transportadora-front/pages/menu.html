@@ -1,77 +1,106 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Menu</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
-
-
-</head>
-<body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-secondary">
-
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Transporte</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNavDropdown">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="/index.html">Home</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            DESPESA
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/pages/despesa/listar_despesa.html">GERAL  </a></li>
-          </ul>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            CADASTROS
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/pages/viagem/cadastro_viagem.html">VIAGEM</a></li>
-            <li><a class="dropdown-item" href="/pages/fazenda/cadastro_fazenda.html">FAZENDA</a></li>
-            <li><a class="dropdown-item" href="/pages/usuario/cadastro_usuario.html">USUARIO</a></li>
-            <li><a class="dropdown-item" href="/pages/veiculo/cadastro_veiculo.html">VEICULO</a></li>
-            <li><a class="dropdown-item" href="/pages/municipio/cadastro_municipio.html">MUNICIPIO</a></li>
-            <li><a class="dropdown-item" href="/pages/empresa/cadastro_empresa.html">EMPRESA</a></li>
-          </ul>
-        </li>
-
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            LISTAS
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/pages/veiculo/listar_veiculo.html">LISTA VEÍCULOS</a></li>
-            <li><a class="dropdown-item" href="/pages/usuario/listar_usuario.html">LISTA USUARIOS</a></li>
-            <li><a class="dropdown-item" href="/pages/municipio/listar_municipio.html">LISTA MUNICÍPIOS</a></li>
-            <li><a class="dropdown-item" href="/pages/fazenda/listar_fazenda.html">LISTA FAZENDAS</a></li>
-            <li><a class="dropdown-item" href="/pages/viagem/listar_viagem.html">LISTA VIAGENS</a></li>
-            <li><a class="dropdown-item" href="/pages/empresa/listar_empresa.html">LISTA EMPRESAS</a></li>
-          </ul>
-        </li>
-
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            ABASTECIMENTO
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/pages/abastecimento/cadastro_abastecimento.html">CADASTRA</a></li>
-            <li><a class="dropdown-item" href="/pages/abastecimento/listar_abastecimento.html">RELATORIO</a></li>
-          </ul>
-        </li>
-      </ul>
-    </div>
+<aside class="app-sidebar" id="appSidebar">
+  <div class="sidebar-brand">
+    <a href="/index.html" class="brand-link">
+      <img src="/img/boi-logo.png" alt="Logo Transporte" class="brand-logo">
+      <span class="brand-title">Transporte</span>
+    </a>
   </div>
-</nav>
 
-<script src="../js/menu.js"></script>  
-</body>
-</html>
+  <nav class="sidebar-nav" aria-label="Menu principal">
+    <a class="sidebar-item" href="/index.html" data-menu-match="/index.html">
+      <i class="bi bi-grid-1x2-fill"></i>
+      <span>Dashboard</span>
+    </a>
+
+    <a class="sidebar-item" href="/pages/viagem/listar_viagem.html" data-menu-match="/pages/viagem/">
+      <i class="bi bi-truck"></i>
+      <span>Viagens</span>
+    </a>
+
+    <div class="sidebar-group" data-sidebar-group>
+      <button class="sidebar-group-title" type="button" data-sidebar-toggle>
+        <span>
+          <i class="bi bi-file-earmark-bar-graph-fill"></i>
+          Financeiro
+        </span>
+        <i class="bi bi-chevron-down group-arrow"></i>
+      </button>
+
+      <div class="sidebar-submenu">
+        <a class="sidebar-subitem" href="/pages/despesa/listar_despesa.html" data-menu-match="/pages/despesa/">
+          <i class="bi bi-currency-dollar"></i>
+          <span>Despesas</span>
+        </a>
+
+        <a class="sidebar-subitem" href="/pages/abastecimento/listar_abastecimento.html" data-menu-match="/pages/abastecimento/">
+          <i class="bi bi-fuel-pump"></i>
+          <span>Abastecimentos</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="sidebar-group" data-sidebar-group>
+      <button class="sidebar-group-title" type="button" data-sidebar-toggle>
+        <span>
+          <i class="bi bi-box-seam-fill"></i>
+          Cadastros
+        </span>
+        <i class="bi bi-chevron-down group-arrow"></i>
+      </button>
+
+      <div class="sidebar-submenu">
+        <a class="sidebar-subitem" href="/pages/veiculo/listar_veiculo.html" data-menu-match="/pages/veiculo/">
+          <i class="bi bi-truck-front"></i>
+          <span>Veículos</span>
+        </a>
+
+        <a class="sidebar-subitem" href="/pages/usuario/listar_usuario.html" data-menu-match="/pages/usuario/">
+          <i class="bi bi-people-fill"></i>
+          <span>Motoristas / Usuários</span>
+        </a>
+
+        <a class="sidebar-subitem" href="/pages/fazenda/listar_fazenda.html" data-menu-match="/pages/fazenda/">
+          <i class="bi bi-house-door-fill"></i>
+          <span>Fazendas</span>
+        </a>
+
+        <a class="sidebar-subitem" href="/pages/empresa/listar_empresa.html" data-menu-match="/pages/empresa/">
+          <i class="bi bi-buildings-fill"></i>
+          <span>Empresas</span>
+        </a>
+
+        <a class="sidebar-subitem" href="/pages/municipio/listar_municipio.html" data-menu-match="/pages/municipio/">
+          <i class="bi bi-geo-alt-fill"></i>
+          <span>Municípios</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="sidebar-group" data-sidebar-group>
+      <button class="sidebar-group-title" type="button" data-sidebar-toggle>
+        <span>
+          <i class="bi bi-clipboard2-data-fill"></i>
+          Relatórios
+        </span>
+        <i class="bi bi-chevron-down group-arrow"></i>
+      </button>
+
+      <div class="sidebar-submenu">
+        <a class="sidebar-subitem" href="/pages/viagem/listar_viagem.html?menu=relatorio-viagens" data-menu-match="relatorio-viagens">
+          <i class="bi bi-graph-up-arrow"></i>
+          <span>Relatório de Viagens</span>
+        </a>
+
+        <a class="sidebar-subitem" href="/pages/despesa/listar_despesa.html?menu=relatorio-despesas" data-menu-match="relatorio-despesas">
+          <i class="bi bi-cash-coin"></i>
+          <span>Relatório de Despesas</span>
+        </a>
+
+        <a class="sidebar-subitem" href="/pages/abastecimento/listar_abastecimento.html?menu=relatorio-abastecimentos" data-menu-match="relatorio-abastecimentos">
+          <i class="bi bi-fuel-pump-fill"></i>
+          <span>Relatório de Abastecimentos</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+</aside>
