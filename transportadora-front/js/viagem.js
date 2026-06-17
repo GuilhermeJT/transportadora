@@ -509,4 +509,19 @@ document.addEventListener("DOMContentLoaded", () => {
   if (btnPdf) {
     btnPdf.addEventListener("click", window.baixarPdfViagens);
   }
+
+  
+  const btnLimpar = document.getElementById("btnLimpar");
+  if (btnLimpar) {
+    btnLimpar.addEventListener("click", () => {
+      
+      document.getElementById("dataInicio").value = "";
+      document.getElementById("dataFim").value   = "";
+
+      
+      carregarViagensLista();
+    });
+  }
+
+  
 });
