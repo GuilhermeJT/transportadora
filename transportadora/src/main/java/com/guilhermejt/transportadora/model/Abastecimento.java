@@ -67,6 +67,10 @@ public class Abastecimento {
                 .doubleValue();
     }
 
+    @ManyToOne
+    @JoinColumn(name = "condicao")
+    private Condicao condicao;
+
 
 
 
