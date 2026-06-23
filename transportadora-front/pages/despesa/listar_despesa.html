@@ -18,15 +18,24 @@
         <h5 class="card-title mb-3">Filtrar Despesas</h5>
         <form>
           <div class="row g-3 align-items-end">
-            <div class="col-md-4">
+            <div class="col-md-3">
               <label class="form-label">Data Início</label>
               <input type="date" id="dataInicio" class="form-control" required>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
               <label class="form-label">Data Fim</label>
               <input type="date" id="dataFim" class="form-control" required>
             </div>
-            <div class="col-md-4 d-flex gap-2 align-items-end">
+            <div class="col-md-3">
+              <label for="filtroMotorista" class="form-label">Motorista</label>
+              <input type="text" id="filtroMotorista" class="form-control" placeholder="Nome do motorista">
+            </div>
+            <div class="col-md-3">
+              <label for="filtroPlaca" class="form-label">Placa</label>
+              <input type="text" id="filtroPlaca" class="form-control" placeholder="ABC-1234">
+            </div>
+
+            <div class="col-12 d-flex gap-2">
               <button type="submit" class="btn btn-success" id="btnFiltrar">Filtrar</button>
               <button type="button" class="btn btn-secondary" id="btnLimpar">Limpar</button>
               <button type="button" class="btn btn-danger" id="btnPdf" title="Baixar PDF do período">

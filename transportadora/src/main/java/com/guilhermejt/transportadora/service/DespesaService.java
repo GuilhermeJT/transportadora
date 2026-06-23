@@ -6,6 +6,8 @@ import com.guilhermejt.transportadora.repository.DespesaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import org.springframework.data.domain.Sort;
+import java.time.LocalDate;
 
 @Service
 public class DespesaService {
@@ -19,9 +21,14 @@ public class DespesaService {
         return repository.save(despesa);
     }
 
-    public List<Despesa> getDespesas(){
-        return repository.findAll();
+    public List<Despesa> filtroDespesas(LocalDate inicio, LocalDate fim, String motorista, String placa){
+        String m = (motorista != null) ? motorista.trim() : "";
+        String p = (placa != null) ? placa.trim() : "";
+        return repository.filtrar(inicio, fim, m, p);
+    }
 
+    public List<Despesa> getDespesas(){
+        return repository.findAll(Sort.by("dataDespesa").ascending());
     }
 
     public Despesa getDespesa(Integer id){
