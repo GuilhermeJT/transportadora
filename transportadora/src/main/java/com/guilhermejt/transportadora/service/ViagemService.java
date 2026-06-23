@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import org.springframework.data.domain.Sort;
 
 @Service
 public class ViagemService {
@@ -21,12 +22,14 @@ public class ViagemService {
         return repository.save(viagem);
     }
 
-    public List<Viagem> filtroViagens(LocalDate inicio, LocalDate fim){
-        return repository.findByDataEmbarqueBetween(inicio, fim);
+    public List<Viagem> filtroViagens(LocalDate inicio, LocalDate fim, String motorista, String placa){
+        String m = (motorista != null) ? motorista.trim() : "";
+        String p = (placa != null) ? placa.trim() : "";
+        return repository.filtrar(inicio, fim, m, p);
     }
 
     public List<Viagem> getViagens(){
-        return repository.findAll();
+        return repository.findAll(Sort.by("dataEmbarque").ascending());
     }
 
     public Viagem getViagem(Integer id){

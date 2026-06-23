@@ -139,6 +139,8 @@ async function filtrarViagensPorData(event) {
 
   const inicio = document.getElementById("dataInicio").value; // input type="date"
   const fim = document.getElementById("dataFim").value;
+  const motorista = document.getElementById("filtroMotorista").value.trim();
+  const placa = document.getElementById("filtroPlaca").value.trim();
 
   if (!inicio || !fim) {
     alert("Selecione a data de início e a data final.");
@@ -150,8 +152,12 @@ async function filtrarViagensPorData(event) {
     return;
   }
 
+  const params = new URLSearchParams({ inicio, fim });
+  if (motorista) params.append("motorista", motorista);
+  if (placa) params.append("placa", placa);
+
   try {
-    const response = await fetch(`${API_URL_VIAGEM}/filtro?inicio=${inicio}&fim=${fim}`);
+    const response = await fetch(`${API_URL_VIAGEM}/filtro?${params.toString()}`);
     if (!response.ok) throw new Error("Erro ao filtrar Viagens");
 
     const viagem = await response.json();
@@ -209,11 +215,6 @@ async function filtrarViagensPorData(event) {
     alert("Não foi possível filtrar as Viagens.");
   }
 }
-
-
-
-
-
 
 //---------------------->>
 
@@ -399,10 +400,12 @@ window.editarViagem = function(id) {
   window.location.href = `editar_viagem.html?id=${id}`;
 };
 
-// gera e baixa o PDF das viagens do período filtrado (exige datas)
+// gera e baixa o PDF das viagens do período/filtros atuais
 window.baixarPdfViagens = async function () {
   const inicio = document.getElementById("dataInicio").value;
   const fim = document.getElementById("dataFim").value;
+  const motorista = document.getElementById("filtroMotorista").value.trim();
+  const placa = document.getElementById("filtroPlaca").value.trim();
 
   if (!inicio || !fim) {
     alert("Selecione a data de início e a data final para baixar o PDF.");
@@ -413,8 +416,12 @@ window.baixarPdfViagens = async function () {
     return;
   }
 
+  const params = new URLSearchParams({ inicio, fim });
+  if (motorista) params.append("motorista", motorista);
+  if (placa) params.append("placa", placa);
+
   try {
-    const response = await fetch(`${API_URL_VIAGEM}/filtro?inicio=${inicio}&fim=${fim}`);
+    const response = await fetch(`${API_URL_VIAGEM}/filtro?${params.toString()}`);
     if (!response.ok) throw new Error("Erro ao buscar viagens para o PDF");
 
     const viagens = await response.json();
@@ -517,6 +524,8 @@ document.addEventListener("DOMContentLoaded", () => {
       
       document.getElementById("dataInicio").value = "";
       document.getElementById("dataFim").value   = "";
+      document.getElementById("filtroMotorista").value = "";
+      document.getElementById("filtroPlaca").value = "";
 
       
       carregarViagensLista();
