@@ -16,12 +16,35 @@ function badgeCondicao(condicao) {
   return `<span class="badge ${cls}">${status}</span>`;
 }
 
-// converte dd/MM/yyyy -> yyyy-MM-dd (para comparar com os inputs type="date")
+// converte dd/MM/yyyy -> yyyy-MM-dd (mantido por compatibilidade, não é mais usado no filtro)
 function brParaISO(br) {
   if (!br) return "";
   const partes = br.split("/");
   if (partes.length !== 3) return "";
   return `${partes[2]}-${partes[1]}-${partes[0]}`;
+}
+
+// monta a linha (tr) de um abastecimento para a tabela
+function linhaAbastecimento(a) {
+  const tr = document.createElement("tr");
+  tr.innerHTML = `
+    <td>${a.data}</td>
+    <td>${a.empresa ? a.empresa.nomeEmpresa : "sem empresa"}</td>
+    <td>${a.nf}</td>
+    <td>${a.veiculo ? a.veiculo.placa : "sem placa"}</td>
+    <td>${a.kmOdometro}</td>
+    <td>${a.litros}</td>
+    <td>${a.valorUni}</td>
+    <td>${a.desconto}</td>
+    <td>${a.total}</td>
+    <td>${a.media}</td>
+    <td class="text-center">${badgeCondicao(a.condicao)}</td>
+    <td class="text-center">
+      <button class="btn btn-sm btn-warning me-2" onclick="window.editarAbastecimento(${a.id})">Editar</button>
+      <button class="btn btn-sm btn-danger" onclick="window.deletarAbastecimento(${a.id})">Excluir</button>
+    </td>
+  `;
+  return tr;
 }
 
 async function cadastroAbastecimento(event) {
@@ -67,7 +90,6 @@ async function cadastroAbastecimento(event) {
 
 
 // listar abastecimentos
-
 async function carregarAbastecimentoLista() {
   const tabela = document.getElementById("tabelaAbastecimento");
   if (!tabela) return; 
@@ -78,6 +100,10 @@ async function carregarAbastecimentoLista() {
 
     const abastecimento = await response.json();
     tabela.innerHTML = ""; 
+
+    // lista completa: esconde o total (só aparece ao filtrar por data)
+    const total = document.getElementById("totalAbastecimento");
+    if (total) total.style.display = "none";
 
     if (abastecimento.length === 0) {
       tabela.innerHTML = `
@@ -90,38 +116,14 @@ async function carregarAbastecimentoLista() {
       return;
     }
 
-    abastecimento.forEach(a => {
-      const tr = document.createElement("tr");
-
-      tr.innerHTML = `
-        <td>${a.data}</td>
-        <td>${a.empresa ? a.empresa.nomeEmpresa : "sem empresa"}
-        <td>${a.nf}</td>
-        <td>${a.veiculo ? a.veiculo.placa : "sem placa"}</td>
-        <td>${a.kmOdometro}</td>
-        <td>${a.litros}</td>
-        <td>${a.valorUni}</td>
-        <td>${a.desconto}</td>
-        <td>${a.total}</td>
-        <td>${a.media}</td>
-        <td class="text-center">${badgeCondicao(a.condicao)}</td>
-        
-        <td class="text-center">
-          <button class="btn btn-sm btn-warning me-2" onclick="window.editarAbastecimento(${a.id})">Editar</button>
-          <button class="btn btn-sm btn-danger" onclick="window.deletarAbastecimento(${a.id})">Excluir</button>
-        </td>
-      `;
-
-      tabela.appendChild(tr);
-    });
+    abastecimento.forEach(a => tabela.appendChild(linhaAbastecimento(a)));
   } catch (error) {
     console.error("Erro:", error);
     alert("Não foi possível carregar os Abastecimentos.");
   }
 }
 
-// ===================== FILTRO POR DATA (client-side) =====================
-// a "data" vem como dd/MM/yyyy; convertemos para ISO (yyyy-MM-dd) antes de comparar
+// ===================== FILTRO (backend) =====================
 async function filtrarAbastecimentoPorData(event) {
   if (event) event.preventDefault();
 
@@ -130,6 +132,7 @@ async function filtrarAbastecimentoPorData(event) {
 
   const inicio = document.getElementById("dataInicio").value;
   const fim = document.getElementById("dataFim").value;
+  const placa = document.getElementById("filtroPlaca").value.trim();
 
   if (!inicio || !fim) {
     alert("Selecione a data de início e a data final para filtrar.");
@@ -140,24 +143,22 @@ async function filtrarAbastecimentoPorData(event) {
     return;
   }
 
+  const params = new URLSearchParams({ inicio, fim });
+  if (placa) params.append("placa", placa);
+
   try {
-    const response = await fetch(API_URL_ABASTECIMENTO);
-    if (!response.ok) throw new Error("Erro ao carregar os Abastecimentos");
+    const response = await fetch(`${API_URL_ABASTECIMENTO}/filtro?${params.toString()}`);
+    if (!response.ok) throw new Error("Erro ao filtrar os Abastecimentos");
 
-    const todos = await response.json();
-    const abastecimento = todos.filter(a => {
-      const dataISO = brParaISO(a.data);
-      return dataISO >= inicio && dataISO <= fim;
-    });
+    const abastecimento = await response.json();
 
-    // soma as despesas do período e mostra o total
+    // soma o total do período e mostra
     const somaTotal = abastecimento.reduce((acc, a) => acc + Number(a.total || 0), 0);
     const total = document.getElementById("totalAbastecimento");
     if (total) {
       total.textContent = `Total: R$ ${formatarBRL(somaTotal)}`;
       total.style.display = "";
     }
-
 
     tabela.innerHTML = "";
 
@@ -172,40 +173,18 @@ async function filtrarAbastecimentoPorData(event) {
       return;
     }
 
-    abastecimento.forEach(a => {
-      const tr = document.createElement("tr");
-
-      tr.innerHTML = `
-        <td>${a.data}</td>
-        <td>${a.empresa ? a.empresa.nomeEmpresa : "sem empresa"}
-        <td>${a.nf}</td>
-        <td>${a.veiculo ? a.veiculo.placa : "sem placa"}</td>
-        <td>${a.kmOdometro}</td>
-        <td>${a.litros}</td>
-        <td>${a.valorUni}</td>
-        <td>${a.desconto}</td>
-        <td>${a.total}</td>
-        <td>${a.media}</td>
-        <td class="text-center">${badgeCondicao(a.condicao)}</td>
-        
-        <td class="text-center">
-          <button class="btn btn-sm btn-warning me-2" onclick="window.editarAbastecimento(${a.id})">Editar</button>
-          <button class="btn btn-sm btn-danger" onclick="window.deletarAbastecimento(${a.id})">Excluir</button>
-        </td>
-      `;
-
-      tabela.appendChild(tr);
-    });
+    abastecimento.forEach(a => tabela.appendChild(linhaAbastecimento(a)));
   } catch (error) {
     console.error("Erro:", error);
     alert("Não foi possível filtrar os Abastecimentos.");
   }
 }
 
-// ===================== PDF do período (exige datas) =====================
+// ===================== PDF do período/filtros (backend) =====================
 window.baixarPdfAbastecimento = async function () {
   const inicio = document.getElementById("dataInicio").value;
   const fim = document.getElementById("dataFim").value;
+  const placa = document.getElementById("filtroPlaca").value.trim();
 
   if (!inicio || !fim) {
     alert("Selecione a data de início e a data final para baixar o PDF.");
@@ -216,15 +195,14 @@ window.baixarPdfAbastecimento = async function () {
     return;
   }
 
+  const params = new URLSearchParams({ inicio, fim });
+  if (placa) params.append("placa", placa);
+
   try {
-    const response = await fetch(API_URL_ABASTECIMENTO);
+    const response = await fetch(`${API_URL_ABASTECIMENTO}/filtro?${params.toString()}`);
     if (!response.ok) throw new Error("Erro ao carregar os Abastecimentos");
 
-    const todos = await response.json();
-    const abastecimentos = todos.filter(a => {
-      const dataISO = brParaISO(a.data);
-      return dataISO >= inicio && dataISO <= fim;
-    });
+    const abastecimentos = await response.json();
 
     if (abastecimentos.length === 0) {
       alert("Nenhum abastecimento no período informado.");
@@ -294,10 +272,11 @@ window.baixarPdfAbastecimento = async function () {
   }
 };
 
-// limpa o filtro de datas e volta a listagem completa
+// limpa o filtro e volta a listagem completa
 window.limparFiltroAbastecimento = function () {
   document.getElementById("dataInicio").value = "";
   document.getElementById("dataFim").value = "";
+  document.getElementById("filtroPlaca").value = "";
   carregarAbastecimentoLista();
 };
 
