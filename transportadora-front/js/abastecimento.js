@@ -1,5 +1,29 @@
 const API_URL_ABASTECIMENTO = "http://localhost:8080/abastecimento";
 
+// formata número no padrão R$ brasileiro (1.234,56)
+function formatarBRL(valor) {
+  return Number(valor || 0).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+// selo de cor para a condição (pago = verde, pendente = amarelo)
+function badgeCondicao(condicao) {
+  const status = condicao && condicao.status ? condicao.status : null;
+  if (!status) return '<span class="badge bg-secondary">—</span>';
+  const s = status.toLowerCase();
+  let cls = "bg-secondary";
+  if (s === "pago") cls = "bg-success";
+  else if (s === "pendente") cls = "bg-warning text-dark";
+  return `<span class="badge ${cls}">${status}</span>`;
+}
+
+// converte dd/MM/yyyy -> yyyy-MM-dd (para comparar com os inputs type="date")
+function brParaISO(br) {
+  if (!br) return "";
+  const partes = br.split("/");
+  if (partes.length !== 3) return "";
+  return `${partes[2]}-${partes[1]}-${partes[0]}`;
+}
+
 async function cadastroAbastecimento(event) {
   event.preventDefault();
 
@@ -14,6 +38,7 @@ async function cadastroAbastecimento(event) {
   const litros = parseFloat(document.getElementById("litros").value);
   const valorUni = parseFloat(document.getElementById("valorUni").value);
   const desconto = parseFloat(document.getElementById("desconto").value);
+  const condicao = document.getElementById("selectCondicao").value;
 
 
   const response = await fetch(API_URL_ABASTECIMENTO, {
@@ -27,7 +52,8 @@ async function cadastroAbastecimento(event) {
         kmOdometro,
         litros,
         valorUni,
-        desconto
+        desconto,
+        condicao: condicao ? { id: parseInt(condicao) } : null
         })
   });
 
@@ -56,7 +82,7 @@ async function carregarAbastecimentoLista() {
     if (abastecimento.length === 0) {
       tabela.innerHTML = `
         <tr>
-          <td colspan="11" class="text-center text-muted">
+          <td colspan="12" class="text-center text-muted">
             Nenhum abastecimentos cadastrada.
           </td>
         </tr>
@@ -78,6 +104,7 @@ async function carregarAbastecimentoLista() {
         <td>${a.desconto}</td>
         <td>${a.total}</td>
         <td>${a.media}</td>
+        <td class="text-center">${badgeCondicao(a.condicao)}</td>
         
         <td class="text-center">
           <button class="btn btn-sm btn-warning me-2" onclick="window.editarAbastecimento(${a.id})">Editar</button>
@@ -92,6 +119,187 @@ async function carregarAbastecimentoLista() {
     alert("Não foi possível carregar os Abastecimentos.");
   }
 }
+
+// ===================== FILTRO POR DATA (client-side) =====================
+// a "data" vem como dd/MM/yyyy; convertemos para ISO (yyyy-MM-dd) antes de comparar
+async function filtrarAbastecimentoPorData(event) {
+  if (event) event.preventDefault();
+
+  const tabela = document.getElementById("tabelaAbastecimento");
+  if (!tabela) return;
+
+  const inicio = document.getElementById("dataInicio").value;
+  const fim = document.getElementById("dataFim").value;
+
+  if (!inicio || !fim) {
+    alert("Selecione a data de início e a data final para filtrar.");
+    return;
+  }
+  if (inicio > fim) {
+    alert("A data de início não pode ser maior que a data final.");
+    return;
+  }
+
+  try {
+    const response = await fetch(API_URL_ABASTECIMENTO);
+    if (!response.ok) throw new Error("Erro ao carregar os Abastecimentos");
+
+    const todos = await response.json();
+    const abastecimento = todos.filter(a => {
+      const dataISO = brParaISO(a.data);
+      return dataISO >= inicio && dataISO <= fim;
+    });
+
+    // soma as despesas do período e mostra o total
+    const somaTotal = abastecimento.reduce((acc, a) => acc + Number(a.total || 0), 0);
+    const total = document.getElementById("totalAbastecimento");
+    if (total) {
+      total.textContent = `Total: R$ ${formatarBRL(somaTotal)}`;
+      total.style.display = "";
+    }
+
+
+    tabela.innerHTML = "";
+
+    if (abastecimento.length === 0) {
+      tabela.innerHTML = `
+        <tr>
+          <td colspan="12" class="text-center text-muted">
+            Nenhum abastecimento no intervalo informado.
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    abastecimento.forEach(a => {
+      const tr = document.createElement("tr");
+
+      tr.innerHTML = `
+        <td>${a.data}</td>
+        <td>${a.empresa ? a.empresa.nomeEmpresa : "sem empresa"}
+        <td>${a.nf}</td>
+        <td>${a.veiculo ? a.veiculo.placa : "sem placa"}</td>
+        <td>${a.kmOdometro}</td>
+        <td>${a.litros}</td>
+        <td>${a.valorUni}</td>
+        <td>${a.desconto}</td>
+        <td>${a.total}</td>
+        <td>${a.media}</td>
+        <td class="text-center">${badgeCondicao(a.condicao)}</td>
+        
+        <td class="text-center">
+          <button class="btn btn-sm btn-warning me-2" onclick="window.editarAbastecimento(${a.id})">Editar</button>
+          <button class="btn btn-sm btn-danger" onclick="window.deletarAbastecimento(${a.id})">Excluir</button>
+        </td>
+      `;
+
+      tabela.appendChild(tr);
+    });
+  } catch (error) {
+    console.error("Erro:", error);
+    alert("Não foi possível filtrar os Abastecimentos.");
+  }
+}
+
+// ===================== PDF do período (exige datas) =====================
+window.baixarPdfAbastecimento = async function () {
+  const inicio = document.getElementById("dataInicio").value;
+  const fim = document.getElementById("dataFim").value;
+
+  if (!inicio || !fim) {
+    alert("Selecione a data de início e a data final para baixar o PDF.");
+    return;
+  }
+  if (inicio > fim) {
+    alert("A data de início não pode ser maior que a data final.");
+    return;
+  }
+
+  try {
+    const response = await fetch(API_URL_ABASTECIMENTO);
+    if (!response.ok) throw new Error("Erro ao carregar os Abastecimentos");
+
+    const todos = await response.json();
+    const abastecimentos = todos.filter(a => {
+      const dataISO = brParaISO(a.data);
+      return dataISO >= inicio && dataISO <= fim;
+    });
+
+    if (abastecimentos.length === 0) {
+      alert("Nenhum abastecimento no período informado.");
+      return;
+    }
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: "landscape", unit: "pt", format: "a4" });
+    const larguraPagina = doc.internal.pageSize.getWidth();
+
+    doc.setFontSize(14);
+    doc.setFont(undefined, "bold");
+    doc.text("ABASTECIMENTOS", larguraPagina / 2, 30, { align: "center" });
+
+    const head = [["DATA", "EMPRESA", "NF", "PLACA", "KM ODOMETRO", "LITROS", "VALOR", "DESCONTO", "TOTAL", "MEDIA", "SITUAÇÃO"]];
+
+    let somaTotal = 0;
+    const body = abastecimentos.map(a => {
+      somaTotal += Number(a.total || 0);
+      return [
+        a.data ?? "",
+        a.empresa ? a.empresa.nomeEmpresa : "",
+        a.nf ?? "",
+        a.veiculo ? a.veiculo.placa : "",
+        a.kmOdometro ?? "",
+        a.litros ?? "",
+        `R$ ${formatarBRL(a.valorUni)}`,
+        `R$ ${formatarBRL(a.desconto)}`,
+        `R$ ${formatarBRL(a.total)}`,
+        a.media ?? "",
+        (a.condicao && a.condicao.status ? a.condicao.status : "").toUpperCase()
+      ];
+    });
+
+    doc.autoTable({
+      head: head,
+      body: body,
+      startY: 42,
+      theme: "grid",
+      styles: { fontSize: 8, cellPadding: 3, lineColor: [0, 0, 0], lineWidth: 0.5, textColor: [0, 0, 0], overflow: "linebreak", valign: "middle" },
+      headStyles: { fillColor: [220, 220, 220], textColor: [0, 0, 0], fontStyle: "bold", halign: "center", valign: "middle" },
+      columnStyles: {
+        0: { cellWidth: 62, halign: "center" },
+        2: { cellWidth: 50, halign: "center" },
+        3: { cellWidth: 62, halign: "center" },
+        6: { halign: "right" },
+        7: { halign: "right" },
+        8: { halign: "right" },
+        10: { cellWidth: 70, halign: "center" }
+      }
+    });
+
+    const posY = doc.lastAutoTable.finalY + 20;
+    doc.setFontSize(11);
+    doc.setFont(undefined, "bold");
+    doc.text(`TOTAL = R$ ${formatarBRL(somaTotal)}`, larguraPagina - 40, posY, { align: "right" });
+
+    const hoje = new Date();
+    const dd = String(hoje.getDate()).padStart(2, "0");
+    const mm = String(hoje.getMonth() + 1).padStart(2, "0");
+    const aaaa = hoje.getFullYear();
+    doc.save(`ABASTECIMENTOS_${dd}_${mm}_${aaaa}.pdf`);
+
+  } catch (error) {
+    console.error("Erro:", error);
+    alert("Não foi possível gerar o PDF.");
+  }
+};
+
+// limpa o filtro de datas e volta a listagem completa
+window.limparFiltroAbastecimento = function () {
+  document.getElementById("dataInicio").value = "";
+  document.getElementById("dataFim").value = "";
+  carregarAbastecimentoLista();
+};
 
 function getAbastecimentoIdFromUrl() {
   const params = new URLSearchParams(window.location.search);
@@ -112,6 +320,7 @@ async function updateAbastecimento(event) {
   const litros = document.getElementById("litros").value;
   const valorUni = document.getElementById("valorUni").value;
   const desconto = document.getElementById("desconto").value;
+  const condicao = document.getElementById("selectCondicao").value;
 
   const payload = {};
 
@@ -127,6 +336,7 @@ async function updateAbastecimento(event) {
   if (litros) payload.litros = Number(litros);
   if (valorUni) payload.valorUni = Number(valorUni);
   if (desconto) payload.desconto = Number(desconto);
+  if (condicao) payload.condicao = { id: parseInt(condicao) };
 
   try {
     const response = await fetch(`${API_URL_ABASTECIMENTO}/${id}`, {
@@ -196,6 +406,7 @@ async function carregarAbastecimento() {
     if (a.litros) document.getElementById("litros").value = a.litros;
     if (a.valorUni) document.getElementById("valorUni").value = a.valorUni;
     if (a.desconto) document.getElementById("desconto").value = a.desconto;
+    document.getElementById("selectCondicao").value = a.condicao?.id || "";
 
   } catch (error) {
     console.error("Erro:", error);
@@ -209,4 +420,13 @@ async function carregarAbastecimento() {
 document.addEventListener("DOMContentLoaded", () => {
   carregarAbastecimentoLista();
   carregarAbastecimento();
+
+  const btnFiltrar = document.getElementById("btnFiltrar");
+  if (btnFiltrar) btnFiltrar.addEventListener("click", filtrarAbastecimentoPorData);
+
+  const btnPdf = document.getElementById("btnPdf");
+  if (btnPdf) btnPdf.addEventListener("click", window.baixarPdfAbastecimento);
+
+  const btnLimpar = document.getElementById("btnLimpar");
+  if (btnLimpar) btnLimpar.addEventListener("click", window.limparFiltroAbastecimento);
 });
