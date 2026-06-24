@@ -262,6 +262,74 @@ window.baixarPdfDespesas = async function () {
   }
 };
 
+// ===================== Excel das despesas do período/filtros (backend) =====================
+window.baixarExcelDespesas = async function () {
+  const inicio = document.getElementById("dataInicio").value;
+  const fim = document.getElementById("dataFim").value;
+  const motorista = document.getElementById("filtroMotorista").value.trim();
+  const placa = document.getElementById("filtroPlaca").value.trim();
+
+  if (!inicio || !fim) {
+    alert("Selecione a data de início e a data final para baixar o Excel.");
+    return;
+  }
+  if (inicio > fim) {
+    alert("A data de início não pode ser maior que a data final.");
+    return;
+  }
+
+  const params = new URLSearchParams({ inicio, fim });
+  if (motorista) params.append("motorista", motorista);
+  if (placa) params.append("placa", placa);
+
+  try {
+    const response = await fetch(`${API_URL_DESPESA}/filtro?${params.toString()}`);
+    if (!response.ok) throw new Error("Erro ao carregar Despesas");
+
+    const despesas = await response.json();
+
+    if (despesas.length === 0) {
+      alert("Nenhuma despesa no período informado.");
+      return;
+    }
+
+    const head = ["DATA", "PLACA", "MOTORISTA", "DESCRIÇÃO", "EMPRESA", "NF", "VALOR", "SITUAÇÃO"];
+
+    let somaTotal = 0;
+    const body = despesas.map(d => {
+      somaTotal += Number(d.valor || 0);
+      return [
+        isoToBR(d.dataDespesa),
+        d.veiculo ? d.veiculo.placa : "",
+        d.motorista ? d.motorista.nome : "",
+        d.descricao ?? "",
+        d.empresa ? d.empresa.nomeEmpresa : "",
+        d.nf ?? "",
+        Number(d.valor || 0),
+        (d.condicao && d.condicao.status ? d.condicao.status : "").toUpperCase()
+      ];
+    });
+
+    body.push(["", "", "", "", "", "", "", ""]);
+    body.push(["TOTAL", somaTotal, "", "", "", "", "", ""]);
+
+    const planilha = [head, ...body];
+    const ws = XLSX.utils.aoa_to_sheet(planilha);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Despesas");
+
+    const hoje = new Date();
+    const dd = String(hoje.getDate()).padStart(2, "0");
+    const mm = String(hoje.getMonth() + 1).padStart(2, "0");
+    const aaaa = hoje.getFullYear();
+    XLSX.writeFile(wb, `DESPESAS_${dd}_${mm}_${aaaa}.xlsx`);
+
+  } catch (error) {
+    console.error("Erro:", error);
+    alert("Não foi possível gerar o Excel.");
+  }
+};
+
 // limpa o filtro e volta a listagem completa
 window.limparFiltroDespesa = function () {
   document.getElementById("dataInicio").value = "";
@@ -390,6 +458,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const btnPdf = document.getElementById("btnPdf");
   if (btnPdf) btnPdf.addEventListener("click", window.baixarPdfDespesas);
+
+  const btnExcel = document.getElementById("btnExcel");
+  if (btnExcel) btnExcel.addEventListener("click", window.baixarExcelDespesas);
 
   const btnLimpar = document.getElementById("btnLimpar");
   if (btnLimpar) btnLimpar.addEventListener("click", window.limparFiltroDespesa);
