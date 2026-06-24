@@ -26,8 +26,12 @@ public class ViagemController {
     }
 
     @GetMapping("/filtro")
-    public ResponseEntity<List<Viagem>> filtroViagens(@RequestParam LocalDate inicio, @RequestParam LocalDate fim){
-        return ResponseEntity.ok(service.filtroViagens(inicio, fim));
+    public ResponseEntity<List<Viagem>> filtroViagens(
+            @RequestParam LocalDate inicio,
+            @RequestParam LocalDate fim,
+            @RequestParam(required = false) String motorista,
+            @RequestParam(required = false) String placa){
+        return ResponseEntity.ok(service.filtroViagens(inicio, fim, motorista, placa));
     }
 
     @GetMapping

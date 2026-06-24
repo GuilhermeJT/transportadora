@@ -114,8 +114,7 @@ async function carregarDespesaLista() {
   }
 }
 
-// ===================== FILTRO POR DATA (client-side) =====================
-// dataDespesa vem em ISO (yyyy-MM-dd), igual ao valor do input date, então dá pra comparar direto
+// ===================== FILTRO (backend) =====================
 async function filtrarDespesasPorData(event) {
   if (event) event.preventDefault();
 
@@ -124,6 +123,8 @@ async function filtrarDespesasPorData(event) {
 
   const inicio = document.getElementById("dataInicio").value;
   const fim = document.getElementById("dataFim").value;
+  const motorista = document.getElementById("filtroMotorista").value.trim();
+  const placa = document.getElementById("filtroPlaca").value.trim();
 
   if (!inicio || !fim) {
     alert("Selecione a data de início e a data final para filtrar.");
@@ -134,15 +135,15 @@ async function filtrarDespesasPorData(event) {
     return;
   }
 
-  try {
-    const response = await fetch(API_URL_DESPESA);
-    if (!response.ok) throw new Error("Erro ao carregar Despesas");
+  const params = new URLSearchParams({ inicio, fim });
+  if (motorista) params.append("motorista", motorista);
+  if (placa) params.append("placa", placa);
 
-    const todas = await response.json();
-    const despesa = todas.filter(d => {
-      const data = (d.dataDespesa || "").split("T")[0];
-      return data >= inicio && data <= fim;
-    });
+  try {
+    const response = await fetch(`${API_URL_DESPESA}/filtro?${params.toString()}`);
+    if (!response.ok) throw new Error("Erro ao filtrar Despesas");
+
+    const despesa = await response.json();
 
     // soma as despesas do período e mostra o total
     const somaTotal = despesa.reduce((acc, d) => acc + Number(d.valor || 0), 0);
@@ -172,10 +173,12 @@ async function filtrarDespesasPorData(event) {
   }
 }
 
-// ===================== PDF das despesas do período (exige datas) =====================
+// ===================== PDF das despesas do período/filtros (backend) =====================
 window.baixarPdfDespesas = async function () {
   const inicio = document.getElementById("dataInicio").value;
   const fim = document.getElementById("dataFim").value;
+  const motorista = document.getElementById("filtroMotorista").value.trim();
+  const placa = document.getElementById("filtroPlaca").value.trim();
 
   if (!inicio || !fim) {
     alert("Selecione a data de início e a data final para baixar o PDF.");
@@ -186,15 +189,15 @@ window.baixarPdfDespesas = async function () {
     return;
   }
 
+  const params = new URLSearchParams({ inicio, fim });
+  if (motorista) params.append("motorista", motorista);
+  if (placa) params.append("placa", placa);
+
   try {
-    const response = await fetch(API_URL_DESPESA);
+    const response = await fetch(`${API_URL_DESPESA}/filtro?${params.toString()}`);
     if (!response.ok) throw new Error("Erro ao carregar Despesas");
 
-    const todas = await response.json();
-    const despesas = todas.filter(d => {
-      const data = (d.dataDespesa || "").split("T")[0];
-      return data >= inicio && data <= fim;
-    });
+    const despesas = await response.json();
 
     if (despesas.length === 0) {
       alert("Nenhuma despesa no período informado.");
@@ -259,10 +262,80 @@ window.baixarPdfDespesas = async function () {
   }
 };
 
-// limpa o filtro de datas e volta a listagem completa
+// ===================== Excel das despesas do período/filtros (backend) =====================
+window.baixarExcelDespesas = async function () {
+  const inicio = document.getElementById("dataInicio").value;
+  const fim = document.getElementById("dataFim").value;
+  const motorista = document.getElementById("filtroMotorista").value.trim();
+  const placa = document.getElementById("filtroPlaca").value.trim();
+
+  if (!inicio || !fim) {
+    alert("Selecione a data de início e a data final para baixar o Excel.");
+    return;
+  }
+  if (inicio > fim) {
+    alert("A data de início não pode ser maior que a data final.");
+    return;
+  }
+
+  const params = new URLSearchParams({ inicio, fim });
+  if (motorista) params.append("motorista", motorista);
+  if (placa) params.append("placa", placa);
+
+  try {
+    const response = await fetch(`${API_URL_DESPESA}/filtro?${params.toString()}`);
+    if (!response.ok) throw new Error("Erro ao carregar Despesas");
+
+    const despesas = await response.json();
+
+    if (despesas.length === 0) {
+      alert("Nenhuma despesa no período informado.");
+      return;
+    }
+
+    const head = ["DATA", "PLACA", "MOTORISTA", "DESCRIÇÃO", "EMPRESA", "NF", "VALOR", "SITUAÇÃO"];
+
+    let somaTotal = 0;
+    const body = despesas.map(d => {
+      somaTotal += Number(d.valor || 0);
+      return [
+        isoToBR(d.dataDespesa),
+        d.veiculo ? d.veiculo.placa : "",
+        d.motorista ? d.motorista.nome : "",
+        d.descricao ?? "",
+        d.empresa ? d.empresa.nomeEmpresa : "",
+        d.nf ?? "",
+        Number(d.valor || 0),
+        (d.condicao && d.condicao.status ? d.condicao.status : "").toUpperCase()
+      ];
+    });
+
+    body.push(["", "", "", "", "", "", "", ""]);
+    body.push(["TOTAL", somaTotal, "", "", "", "", "", ""]);
+
+    const planilha = [head, ...body];
+    const ws = XLSX.utils.aoa_to_sheet(planilha);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Despesas");
+
+    const hoje = new Date();
+    const dd = String(hoje.getDate()).padStart(2, "0");
+    const mm = String(hoje.getMonth() + 1).padStart(2, "0");
+    const aaaa = hoje.getFullYear();
+    XLSX.writeFile(wb, `DESPESAS_${dd}_${mm}_${aaaa}.xlsx`);
+
+  } catch (error) {
+    console.error("Erro:", error);
+    alert("Não foi possível gerar o Excel.");
+  }
+};
+
+// limpa o filtro e volta a listagem completa
 window.limparFiltroDespesa = function () {
   document.getElementById("dataInicio").value = "";
   document.getElementById("dataFim").value = "";
+  document.getElementById("filtroMotorista").value = "";
+  document.getElementById("filtroPlaca").value = "";
   carregarDespesaLista();
 };
 
@@ -385,6 +458,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const btnPdf = document.getElementById("btnPdf");
   if (btnPdf) btnPdf.addEventListener("click", window.baixarPdfDespesas);
+
+  const btnExcel = document.getElementById("btnExcel");
+  if (btnExcel) btnExcel.addEventListener("click", window.baixarExcelDespesas);
 
   const btnLimpar = document.getElementById("btnLimpar");
   if (btnLimpar) btnLimpar.addEventListener("click", window.limparFiltroDespesa);

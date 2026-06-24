@@ -18,15 +18,24 @@
         <h5 class="card-title mb-3">Filtrar Despesas</h5>
         <form>
           <div class="row g-3 align-items-end">
-            <div class="col-md-4">
+            <div class="col-md-3">
               <label class="form-label">Data Início</label>
               <input type="date" id="dataInicio" class="form-control" required>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
               <label class="form-label">Data Fim</label>
               <input type="date" id="dataFim" class="form-control" required>
             </div>
-            <div class="col-md-4 d-flex gap-2 align-items-end">
+            <div class="col-md-3">
+              <label for="filtroMotorista" class="form-label">Motorista</label>
+              <input type="text" id="filtroMotorista" class="form-control" placeholder="Nome do motorista">
+            </div>
+            <div class="col-md-3">
+              <label for="filtroPlaca" class="form-label">Placa</label>
+              <input type="text" id="filtroPlaca" class="form-control" placeholder="ABC-1234">
+            </div>
+
+            <div class="col-12 d-flex gap-2">
               <button type="submit" class="btn btn-success" id="btnFiltrar">Filtrar</button>
               <button type="button" class="btn btn-secondary" id="btnLimpar">Limpar</button>
               <button type="button" class="btn btn-danger" id="btnPdf" title="Baixar PDF do período">
@@ -35,6 +44,9 @@
                   <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
                 </svg>
                 PDF
+              </button>
+              <button type="button" class="btn btn-success" id="btnExcel" title="Baixar Excel do período">
+                Excel
               </button>
             </div>
           </div>
@@ -73,6 +85,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="../../js/despesa.js"></script>
   <script src="../../js/menu.js"></script>
 </body>

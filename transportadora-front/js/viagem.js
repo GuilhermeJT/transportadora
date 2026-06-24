@@ -139,6 +139,8 @@ async function filtrarViagensPorData(event) {
 
   const inicio = document.getElementById("dataInicio").value; // input type="date"
   const fim = document.getElementById("dataFim").value;
+  const motorista = document.getElementById("filtroMotorista").value.trim();
+  const placa = document.getElementById("filtroPlaca").value.trim();
 
   if (!inicio || !fim) {
     alert("Selecione a data de início e a data final.");
@@ -150,8 +152,12 @@ async function filtrarViagensPorData(event) {
     return;
   }
 
+  const params = new URLSearchParams({ inicio, fim });
+  if (motorista) params.append("motorista", motorista);
+  if (placa) params.append("placa", placa);
+
   try {
-    const response = await fetch(`${API_URL_VIAGEM}/filtro?inicio=${inicio}&fim=${fim}`);
+    const response = await fetch(`${API_URL_VIAGEM}/filtro?${params.toString()}`);
     if (!response.ok) throw new Error("Erro ao filtrar Viagens");
 
     const viagem = await response.json();
@@ -209,11 +215,6 @@ async function filtrarViagensPorData(event) {
     alert("Não foi possível filtrar as Viagens.");
   }
 }
-
-
-
-
-
 
 //---------------------->>
 
@@ -399,10 +400,12 @@ window.editarViagem = function(id) {
   window.location.href = `editar_viagem.html?id=${id}`;
 };
 
-// gera e baixa o PDF das viagens do período filtrado (exige datas)
+// gera e baixa o PDF das viagens do período/filtros atuais
 window.baixarPdfViagens = async function () {
   const inicio = document.getElementById("dataInicio").value;
   const fim = document.getElementById("dataFim").value;
+  const motorista = document.getElementById("filtroMotorista").value.trim();
+  const placa = document.getElementById("filtroPlaca").value.trim();
 
   if (!inicio || !fim) {
     alert("Selecione a data de início e a data final para baixar o PDF.");
@@ -413,8 +416,12 @@ window.baixarPdfViagens = async function () {
     return;
   }
 
+  const params = new URLSearchParams({ inicio, fim });
+  if (motorista) params.append("motorista", motorista);
+  if (placa) params.append("placa", placa);
+
   try {
-    const response = await fetch(`${API_URL_VIAGEM}/filtro?inicio=${inicio}&fim=${fim}`);
+    const response = await fetch(`${API_URL_VIAGEM}/filtro?${params.toString()}`);
     if (!response.ok) throw new Error("Erro ao buscar viagens para o PDF");
 
     const viagens = await response.json();
@@ -497,6 +504,85 @@ window.baixarPdfViagens = async function () {
   }
 };
 
+// gera e baixa o Excel das viagens do período/filtros atuais
+window.baixarExcelViagens = async function () {
+  const inicio = document.getElementById("dataInicio").value;
+  const fim = document.getElementById("dataFim").value;
+  const motorista = document.getElementById("filtroMotorista").value.trim();
+  const placa = document.getElementById("filtroPlaca").value.trim();
+
+  if (!inicio || !fim) {
+    alert("Selecione a data de início e a data final para baixar o Excel.");
+    return;
+  }
+  if (inicio > fim) {
+    alert("A data de início não pode ser maior que a data final.");
+    return;
+  }
+
+  const params = new URLSearchParams({ inicio, fim });
+  if (motorista) params.append("motorista", motorista);
+  if (placa) params.append("placa", placa);
+
+  try {
+    const response = await fetch(`${API_URL_VIAGEM}/filtro?${params.toString()}`);
+    if (!response.ok) throw new Error("Erro ao buscar viagens para o Excel");
+
+    const viagens = await response.json();
+    if (viagens.length === 0) {
+      alert("Nenhuma viagem no período informado.");
+      return;
+    }
+
+    const head = [
+      "RESPONSAVEL", "TRANSPORTADORA", "MOTORISTA", "PLACA", "ORIGEM", "DESTINO",
+      "ANIMAIS", "DATA EMBARQUE", "DATA DESEMBARQUE", "KM", "R$ KM", "PEDAGIOS",
+      "ADIANTAMENTO", "TOTAL", "SITUAÇÃO"
+    ];
+
+    let somaTotal = 0;
+    const body = viagens.map(v => {
+      somaTotal += Number(v.total || 0);
+      return [
+        v.responsavel ? v.responsavel.nome : "",
+        v.transportadora ? v.transportadora.nomeEmpresa : "",
+        v.motorista ? v.motorista.nome : "",
+        v.veiculo ? v.veiculo.placa : "",
+        v.origem ? v.origem.nome_fazenda : "",
+        v.destino ? v.destino.nome_fazenda : "",
+        v.quantidadeAnimais ?? "",
+        v.dataEmbarque ?? "",
+        v.dataDesembarque ?? "",
+        v.km ?? "",
+        Number(v.valorPorKm || 0),
+        Number(v.valorGastoPedagio || 0),
+        Number(v.adiantamento || 0),
+        Number(v.total || 0),
+        (v.condicao && v.condicao.status ? v.condicao.status : "").toUpperCase()
+      ];
+    });
+
+    body.push(["", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]);
+    body.push(["TOTAL", somaTotal, "", "", "", "", "", "", "", "", "", "", "", "", ""]);
+
+    const planilha = [head, ...body];
+    const ws = XLSX.utils.aoa_to_sheet(planilha);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Viagens");
+
+    const hoje = new Date();
+    const dd = String(hoje.getDate()).padStart(2, "0");
+    const mm = String(hoje.getMonth() + 1).padStart(2, "0");
+    const aaaa = hoje.getFullYear();
+    XLSX.writeFile(wb, `FRETES_${dd}_${mm}_${aaaa}.xlsx`);
+
+  } catch (error) {
+    console.error("Erro:", error);
+    alert("Não foi possível gerar o Excel.");
+  }
+};
+
+
 document.addEventListener("DOMContentLoaded", () => {
   carregarViagensLista();
 
@@ -517,10 +603,17 @@ document.addEventListener("DOMContentLoaded", () => {
       
       document.getElementById("dataInicio").value = "";
       document.getElementById("dataFim").value   = "";
+      document.getElementById("filtroMotorista").value = "";
+      document.getElementById("filtroPlaca").value = "";
 
       
       carregarViagensLista();
     });
+  }
+
+  const btnExcel = document.getElementById("btnExcel");
+  if (btnExcel) {
+    btnExcel.addEventListener("click", window.baixarExcelViagens);
   }
 
   

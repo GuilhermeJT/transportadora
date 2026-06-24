@@ -18,24 +18,34 @@
         <h5 class="card-title mb-3">Filtrar Abastecimentos</h5>
         <form>
           <div class="row g-3 align-items-end">
-            <div class="col-md-4">
-              <label class="form-label">Data Início</label>
-              <input type="date" id="dataInicio" class="form-control" required>
-            </div>
-            <div class="col-md-4">
-              <label class="form-label">Data Fim</label>
-              <input type="date" id="dataFim" class="form-control" required>
-            </div>
-            <div class="col-md-4 d-flex gap-2 align-items-end">
-              <button type="submit" class="btn btn-success" id="btnFiltrar">Filtrar</button>
-              <button type="button" class="btn btn-secondary" id="btnLimpar">Limpar</button>
-              <button type="button" class="btn btn-danger" id="btnPdf" title="Baixar PDF do período">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="vertical-align:-2px;">
-                  <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-                  <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
-                </svg>
-                PDF
-              </button>
+            <div class="row g-3 align-items-end">
+              <div class="col-md-3">
+                <label class="form-label">Data Início</label>
+                <input type="date" id="dataInicio" class="form-control" required>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">Data Fim</label>
+                <input type="date" id="dataFim" class="form-control" required>
+              </div>
+              <div class="col-md-3">
+                <label for="filtroPlaca" class="form-label" >Placa</label>
+                <input type="text" id="filtroPlaca" class="form-control" placeholder="ABC-1234" >
+              </div>
+
+              <div class="col-md-3 d-flex gap-2 align-items-end">
+                <button type="submit" class="btn btn-success" id="btnFiltrar">Filtrar</button>
+                <button type="button" class="btn btn-secondary" id="btnLimpar">Limpar</button>
+                <button type="button" class="btn btn-danger d-inline-flex align-items-center gap-1" id="btnPdf" title="Baixar PDF do período">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="13" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                    <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+                  </svg>
+                  PDF
+                </button>
+                <button type="button" class="btn btn-success d-inline-flex align-items-center gap-1" id="btnExcel" title="Baixar Excel do período">
+                  Excel
+                </button>
+              </div>
             </div>
           </div>
         </form>
@@ -76,6 +86,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <script src="../../js/abastecimento.js"></script>
   <script src="../../js/menu.js"></script>
   

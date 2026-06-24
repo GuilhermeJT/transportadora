@@ -5,6 +5,7 @@ import com.guilhermejt.transportadora.model.Abastecimento;
 import com.guilhermejt.transportadora.service.AbastecimentoService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.time.LocalDate;
 
 import java.util.List;
 
@@ -27,6 +28,14 @@ public class AbastecimentoController {
     @GetMapping
     public ResponseEntity<List<Abastecimento>> buscarAbastecimentos(){
         return ResponseEntity.ok(service.getAbastecimentos());
+    }
+
+    @GetMapping("/filtro")
+    public ResponseEntity<List<Abastecimento>> filtroAbastecimentos(
+            @RequestParam LocalDate inicio,
+            @RequestParam LocalDate fim,
+            @RequestParam(required = false) String placa){
+        return ResponseEntity.ok(service.filtroAbastecimentos(inicio, fim, placa));
     }
 
     @GetMapping("/{id}")

@@ -4,6 +4,9 @@ import com.guilhermejt.transportadora.model.Abastecimento;
 import com.guilhermejt.transportadora.repository.AbastecimentoRepository;
 import org.springframework.stereotype.Service;
 
+import org.springframework.data.domain.Sort;
+import java.time.LocalDate;
+
 import java.util.List;
 
 @Service
@@ -31,8 +34,13 @@ public class AbastecimentoService {
         return repository.save(abastecimento);
     }
 
+    public List<Abastecimento> filtroAbastecimentos(LocalDate inicio, LocalDate fim, String placa){
+        String p = (placa != null) ? placa.trim() : "";
+        return repository.filtrar(inicio, fim, p);
+    }
+
     public List<Abastecimento> getAbastecimentos(){
-        return repository.findAll();
+        return repository.findAll(Sort.by("data").ascending());
     }
 
     public Abastecimento getAbastecimento(Integer id){

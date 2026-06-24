@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/despesa")
@@ -20,6 +21,14 @@ public class DespesaController {
     public ResponseEntity<Void> salvarDespesa(@RequestBody Despesa despesa){
         service.saveDespesa(despesa);
         return ResponseEntity.ok().build();
+    }
+    @GetMapping("/filtro")
+    public ResponseEntity<List<Despesa>> filtroDespesas(
+            @RequestParam LocalDate inicio,
+            @RequestParam LocalDate fim,
+            @RequestParam(required = false) String motorista,
+            @RequestParam(required = false) String placa){
+        return ResponseEntity.ok(service.filtroDespesas(inicio, fim, motorista, placa));
     }
 
     @GetMapping("/{id}")
