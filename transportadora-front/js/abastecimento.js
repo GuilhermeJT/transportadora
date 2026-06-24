@@ -272,6 +272,75 @@ window.baixarPdfAbastecimento = async function () {
   }
 };
 
+// ===================== Excel do período/filtros (backend) =====================
+window.baixarExcelAbastecimento = async function () {
+  const inicio = document.getElementById("dataInicio").value;
+  const fim = document.getElementById("dataFim").value;
+  const placa = document.getElementById("filtroPlaca").value.trim();
+
+  if (!inicio || !fim) {
+    alert("Selecione a data de início e a data final para baixar o Excel.");
+    return;
+  }
+  if (inicio > fim) {
+    alert("A data de início não pode ser maior que a data final.");
+    return;
+  }
+
+  const params = new URLSearchParams({ inicio, fim });
+  if (placa) params.append("placa", placa);
+
+  try {
+    const response = await fetch(`${API_URL_ABASTECIMENTO}/filtro?${params.toString()}`);
+    if (!response.ok) throw new Error("Erro ao carregar os Abastecimentos");
+
+    const abastecimentos = await response.json();
+
+    if (abastecimentos.length === 0) {
+      alert("Nenhum abastecimento no período informado.");
+      return;
+    }
+
+    const head = ["DATA", "EMPRESA", "NF", "PLACA", "KM ODOMETRO", "LITROS", "VALOR", "DESCONTO", "TOTAL", "MEDIA", "SITUAÇÃO"];
+
+    let somaTotal = 0;
+    const body = abastecimentos.map(a => {
+      somaTotal += Number(a.total || 0);
+      return [
+        a.data ?? "",
+        a.empresa ? a.empresa.nomeEmpresa : "",
+        a.nf ?? "",
+        a.veiculo ? a.veiculo.placa : "",
+        a.kmOdometro ?? "",
+        a.litros ?? "",
+        Number(a.valorUni || 0),
+        Number(a.desconto || 0),
+        Number(a.total || 0),
+        a.media ?? "",
+        (a.condicao && a.condicao.status ? a.condicao.status : "").toUpperCase()
+      ];
+    });
+
+    body.push(["", "", "", "", "", "", "", "", "", "", ""]);
+    body.push(["TOTAL", somaTotal, "", "", "", "", "", "", "", "", ""]);
+
+    const planilha = [head, ...body];
+    const ws = XLSX.utils.aoa_to_sheet(planilha);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Abastecimentos");
+
+    const hoje = new Date();
+    const dd = String(hoje.getDate()).padStart(2, "0");
+    const mm = String(hoje.getMonth() + 1).padStart(2, "0");
+    const aaaa = hoje.getFullYear();
+    XLSX.writeFile(wb, `ABASTECIMENTOS_${dd}_${mm}_${aaaa}.xlsx`);
+
+  } catch (error) {
+    console.error("Erro:", error);
+    alert("Não foi possível gerar o Excel.");
+  }
+};
+
 // limpa o filtro e volta a listagem completa
 window.limparFiltroAbastecimento = function () {
   document.getElementById("dataInicio").value = "";
@@ -405,6 +474,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const btnPdf = document.getElementById("btnPdf");
   if (btnPdf) btnPdf.addEventListener("click", window.baixarPdfAbastecimento);
+
+  const btnExcel = document.getElementById("btnExcel");
+  if (btnExcel) btnExcel.addEventListener("click", window.baixarExcelAbastecimento);
 
   const btnLimpar = document.getElementById("btnLimpar");
   if (btnLimpar) btnLimpar.addEventListener("click", window.limparFiltroAbastecimento);
