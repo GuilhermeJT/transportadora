@@ -55,7 +55,7 @@ async function cadastroViagem(event) {
 
   if (response.ok) {
     alert("Viagem cadastrada com sucesso!");
-    window.location.href = "cadastro_viagem.html"; // redireciona para listagem
+    window.location.href = "listar_viagem.html"; // redireciona para listagem
   } else {
     alert("Erro ao cadastrar Viagem. Verifique os dados e tente novamente.");
   }

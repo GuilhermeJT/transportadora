@@ -19,7 +19,7 @@ async function cadastroFazenda(event) {
 
   if (response.ok) {
     alert("Fazenda cadastrada com sucesso!");
-    window.location.href = "cadastro_fazenda.html"; // redireciona para listagem
+    window.location.href = "listar_fazenda.html"; // redireciona para listagem
   } else {
     alert("Erro ao cadastrar Fazenda. Verifique os dados e tente novamente.");
   }

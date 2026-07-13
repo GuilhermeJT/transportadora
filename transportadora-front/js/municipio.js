@@ -14,7 +14,7 @@ async function cadastroMunicipio(event) {
 
   if (response.ok) {
     alert("Municipio cadastrado com sucesso!");
-    window.location.href = "cadastro_municipio.html"; // redireciona para listagem
+    window.location.href = "listar_municipio.html"; // redireciona para listagem
   } else {
     alert("Erro ao cadastrar Municipio. Verifique os dados e tente novamente.");
   }
